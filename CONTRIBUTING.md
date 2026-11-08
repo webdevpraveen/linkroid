@@ -1,4 +1,4 @@
-﻿# Contributing to Linkroid
+# Contributing to Linkroid
 
 Thank you for helping with Linkroid. The project is young, so the codebase
 and these guidelines still change often.

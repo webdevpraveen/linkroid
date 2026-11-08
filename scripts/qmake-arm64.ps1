@@ -14,7 +14,7 @@
 
 .EXAMPLE
     $env:QMAKE = ./scripts/qmake-arm64.ps1
-    cargo build --release --target aarch64-pc-windows-msvc -p s1-qt-rust
+    cargo build --release --target aarch64-pc-windows-msvc -p linkroid-desktop
 #>
 param(
     [string]$QtRoot = "C:\Qt\6.12.0",

@@ -121,7 +121,7 @@ jobs:
           # Qt 6.12's repository layout needs a current aqtinstall.
           aqtsource: git+https://github.com/miurahr/aqtinstall.git
       - name: Clippy
-        run: cargo clippy --locked -p linkroid-desktop -p linkroid-vcam -p s1-qt-rust --all-targets -- -D warnings
+        run: cargo clippy --locked -p linkroid-desktop -p linkroid-vcam --all-targets -- -D warnings
       - name: Tests
         run: cargo test --locked -p linkroid-desktop -p linkroid-vcam
       - name: QML tests
@@ -289,7 +289,7 @@ jobs:
           cache: true
           aqtsource: git+https://github.com/miurahr/aqtinstall.git
       - name: Clippy
-        run: cargo clippy --locked -p linkroid-desktop -p linkroid-vcam -p s1-qt-rust --all-targets -- -D warnings
+        run: cargo clippy --locked -p linkroid-desktop -p linkroid-vcam --all-targets -- -D warnings
       - name: Tests
         run: cargo test --locked -p linkroid-desktop -p linkroid-vcam
       - name: Video adapter fallback
