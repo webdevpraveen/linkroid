@@ -31,7 +31,12 @@ $newVersion = $Matches[1]
 $api = 'https://api.github.com/repos/webdevpraveen/linkroid/releases'
 $headers = @{ 'User-Agent' = 'linkroid-ci' }
 if ($env:GH_TOKEN) { $headers['Authorization'] = "Bearer $env:GH_TOKEN" }
-$release = if ($From) { Invoke-RestMethod "$api/tags/$From" -Headers $headers } else { Invoke-RestMethod "$api/latest" -Headers $headers }
+$release = try {
+    if ($From) { Invoke-RestMethod "$api/tags/$From" -Headers $headers } else { Invoke-RestMethod "$api/latest" -Headers $headers }
+} catch {
+    Write-Host "No prior release found on GitHub; skipping upgrade check for initial release."
+    exit 0
+}
 $oldVersion = $release.tag_name.TrimStart('v')
 if ($oldVersion -eq $newVersion) {
     Write-Host "This build is $newVersion, the latest release itself: nothing to update from."
