@@ -12,7 +12,7 @@ For end-user setup and feature guides, see [docs/guide/README.md](../guide/READM
 | [Security Model](security-model.md) | Ed25519 device identity, OS key protection (Windows DPAPI tied to user account and Android Keystore AES-256-GCM), QR and 6-digit pairing protocols, `CapabilityMatrix`, consent gates, update checks, and localhost HTTP API isolation |
 | [Protocol Overview](protocol-overview.md) | `linkroid/0` wire framing (LEB128 + CBOR), QUIC stream taxonomy, control handshake, resumable BLAKE3 file transfers, real-time media framing, and index of the 18 specification files in [`docs/protocol/`](../protocol/v0.md) |
 | [Storage and Retention](storage-and-retention.md) | SQLite schema v8 (`core/linkroid-core/src/store.rs`), timeline and `MessagingStyle` conversation caches, persistent FIFO send queue (`send_queue`), and `KeyProtector`-encrypted clipboard history |
-| [Performance Budgets](performance-budgets.md) | Startup, memory, CPU, transport, and latency targets from [`docs/PERFORMANCE.md`](../PERFORMANCE.md), measured benchmarks, and key root-cause engineering optimizations |
+| [Performance Budgets](performance-budgets.md) | Startup, memory, CPU, transport, and latency targets, measured benchmarks, and key root-cause engineering optimizations |
 | [Building and Testing](building-and-testing.md) | Pinned toolchains (`Rust 1.97+`, `Qt 6.12`, `Android compileSdk 37 / minSdk 26`, `JDK 17+`), `cargo xtask` automation, PowerShell verification scripts, and test suites |
 | [Releasing](releasing.md) | Versioning, the tag-driven release workflow, Android and Windows signing, and how both apps update themselves |
 | [Contributing](contributing.md) | Coding conventions, licensing (`MPL-2.0`, `GPL-3.0-or-later`, `CC BY 4.0`), module header policy, protocol evolution rules, and pre-submission checks |
@@ -42,13 +42,9 @@ linkroid/
     ├── technical/              Engineering architecture, security, storage, and build reference
     ├── protocol/               Normative wire protocol specifications (18 documents)
     ├── adr/                    Architecture decision records
-    ├── PERFORMANCE.md          Measured performance report and verification commands
-    └── SECURITY-REVIEW.md      Security audit findings and hardening verification
 ```
 
 ## Related Specification Directories
 
 - [`docs/protocol/`](../protocol/v0.md): Normative wire-level specifications for `linkroid/0` and `linkroid-pair/0`, plus per-capability message schemas.
-- [`docs/adr/`](../adr/README.md): Architecture decision records covering the shared Rust core (`0002`), `iroh` QUIC transport (`0003`), CBOR wire framing (`0004`), the Windows Qt Quick UI stack (`0005`), Kotlin + Jetpack Compose on Android (`0006`), licensing (`0007`), and platform distribution (`0008`).
-- [`docs/architecture/`](../architecture/capabilities.md): Capability matrix reference and core Rust API design notes.
 - [`docs/design/`](../design/README.md): Visual design system tokens, typography, and motion guidelines.

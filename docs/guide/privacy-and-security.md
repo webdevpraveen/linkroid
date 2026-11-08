@@ -2,7 +2,7 @@
 
 Linkroid is built so that your personal data stays on your own devices under your direct control. There is no user account, no cloud database, no analytics or telemetry, and no advertising SDK. Every connection between your phone and your PC is mutually authenticated and encrypted end to end.
 
-For a line-by-line engineering audit of every network, IPC, shared-memory, and filesystem boundary, see [`docs/SECURITY-REVIEW.md`](../SECURITY-REVIEW.md).
+For a line-by-line engineering audit of every network, IPC, shared-memory, and filesystem boundary, see [docs/technical/security-model.md](../technical/security-model.md).
 
 ## 1. Device Identity Keys
 

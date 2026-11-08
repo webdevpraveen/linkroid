@@ -9,7 +9,6 @@ members = [
     "desktop/app",
     "desktop/vcam",
     "tools/xtask",
-    "spikes/s1-qt-rust",
 ]
 # Patched crates, used through [patch.crates-io] below.
 exclude = ["third_party"]

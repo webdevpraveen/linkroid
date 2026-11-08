@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 //! Bluetooth call audio on Windows: there is none. Windows doesn't let apps be
-//! a phone's hands-free unit (`docs/research/hfp.md`), so call audio stays on
+//! a phone's hands-free unit, so call audio stays on
 //! the phone and the Calls page shows no "PC call audio" panel here.
 
 #[derive(Debug, Clone, Default, PartialEq, Eq)]

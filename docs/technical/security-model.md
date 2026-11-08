@@ -2,7 +2,7 @@
 
 Linkroid uses an end-to-end encrypted, mutually authenticated peer-to-peer security model with no central user accounts and no cloud storage. Every connection is authenticated at the transport layer by static Ed25519 device identities and authorized at the application layer by per-device capability toggles and interactive runtime consent gates.
 
-For the full audit record and vulnerability remediation history, see [`docs/SECURITY-REVIEW.md`](../SECURITY-REVIEW.md).
+For the threat model and cryptographic verification details, see below.
 
 ## Threat Model
 

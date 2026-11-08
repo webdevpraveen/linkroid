@@ -48,7 +48,7 @@ The **Calls** page groups your phone's recent incoming, outgoing, and missed cal
 
 When you answer or place a call from your PC, Linkroid controls the call on your phone while the voice audio itself remains on your phone's earpiece, speakerphone, or Bluetooth headset paired directly to your phone.
 
-This is due to two operating system restrictions (documented in detail in [`docs/research/hfp.md`](../research/hfp.md)):
+This is due to two operating system restrictions:
 
 1. **Android hardware voice routing**: On non-rooted Android devices, cellular call audio (`VOICE_CALL`, `VOICE_DOWNLINK`, `VOICE_UPLINK`) is routed by the modem DSP and blocked from software capture (`AudioPlaybackCapture` explicitly excludes voice communication, even at the `Elevated` shell level).
 2. **Windows 11 Bluetooth HFP restrictions**: Windows' `AudioPlaybackConnection` API only supports one-way A2DP media playback (not two-way Hands-Free Profile voice channels), and Microsoft's `PhoneLineTransportDevice` HFP broker on Windows 11 22H2 and newer rejects third-party applications with `E_ACCESSDENIED` unless they run with Microsoft's internal inbox system identity or a WHQL-signed kernel driver.

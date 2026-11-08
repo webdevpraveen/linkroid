@@ -5,8 +5,7 @@ and these guidelines still change often.
 
 ## Before you start
 
-- Read [docs/PLAN.md](docs/PLAN.md) to understand the goals, the architecture
-  and the roadmap.
+- Read [docs/technical/architecture.md](docs/technical/architecture.md) to understand the architecture.
 - For anything bigger than a small fix, open an issue first so we can agree on
   the approach.
 - Be kind. Everyone is expected to follow the [Code of Conduct](CODE_OF_CONDUCT.md).
