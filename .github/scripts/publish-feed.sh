@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env bash
+#!/usr/bin/env bash
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Puts a channel's feed (write-feed.py's output) on the `channels` branch,
 # where the apps read it (raw.githubusercontent.com/<repo>/channels/<channel>.json).

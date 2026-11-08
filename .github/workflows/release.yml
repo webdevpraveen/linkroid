@@ -1,4 +1,4 @@
-﻿# SPDX-License-Identifier: GPL-3.0-or-later
+# SPDX-License-Identifier: GPL-3.0-or-later
 # A tag like v0.1.0 builds the Windows installers, the Linux packages and the
 # signed Android app (build.yml), and puts them on a draft GitHub release
 # with their SHA-256 sums, which the apps' updaters check, for a maintainer

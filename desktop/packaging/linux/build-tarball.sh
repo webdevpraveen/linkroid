@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env bash
+#!/usr/bin/env bash
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Builds a portable Linux tarball for Linkroid Desktop:
 #   dist/Linkroid-<version>-linux-<arch>.tar.gz

@@ -243,7 +243,7 @@ $manifest = Get-Content (Join-Path $root 'desktop\installer\AppxManifest.xml') -
 # Only the package's own version: MinVersion is the oldest Windows it runs on.
 $manifest = $manifest -replace '(<Identity\b[^>]*?\s)Version="[^"]*"', "`${1}Version=`"$numeric.$build`""
 $manifest = $manifest -replace 'ProcessorArchitecture="x64"', "ProcessorArchitecture=`"$Arch`""
-Set-Content -Path (Join-Path $stage 'AppxManifest.xml') -Value $manifest -Encoding UTF8 -NoNewline
+[System.IO.File]::WriteAllText((Join-Path $stage 'AppxManifest.xml'), $manifest, (New-Object System.Text.UTF8Encoding($false)))
 
 # Windows checks the manifest only when setup registers it, and setup can't
 # show why it failed, so it's checked here the way makeappx packs it.

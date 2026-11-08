@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Package
   xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
   xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
@@ -9,13 +9,13 @@
 
   <Identity
     Name="Linkroid.Desktop"
-    Publisher="CN=Praveen <webdevpraveen>, The Linkroid contributors"
+    Publisher="CN=webdevpraveen"
     Version="0.0.1.0"
     ProcessorArchitecture="x64" />
 
   <Properties>
     <DisplayName>Linkroid</DisplayName>
-    <PublisherDisplayName>Praveen <webdevpraveen>, The Linkroid contributors</PublisherDisplayName>
+    <PublisherDisplayName>webdevpraveen</PublisherDisplayName>
     <Logo>Assets\Square150x150Logo.png</Logo>
     <uap10:AllowExternalContent>true</uap10:AllowExternalContent>
   </Properties>
