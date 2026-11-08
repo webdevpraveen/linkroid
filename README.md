@@ -302,9 +302,7 @@ bugs and agreed feature work.
 ## Contributing
 
 Contributions are welcome. Please read [CONTRIBUTING.md](CONTRIBUTING.md) first;
-for anything larger than a small fix, open an issue to agree on the approach.
-Contributions are accepted under the [Developer Certificate of Origin](DCO.txt),
-and everyone is expected to follow the [Code of Conduct](CODE_OF_CONDUCT.md).
+for anything larger than a small fix, open an issue to agree on the approach and everyone is expected to follow the [Code of Conduct](CODE_OF_CONDUCT.md).
 
 To translate Linkroid into your language, see
 [docs/translating.md](docs/translating.md).
