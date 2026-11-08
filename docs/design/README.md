@@ -11,7 +11,7 @@ Contents:
 
 Open the HTML files in a browser and switch themes and Material You seeds at the top.
 
-## Decision (2026-10-05)
+## Decision (2026-11-08)
 
 - **Bloom** is the default theme: the "Bloom Expressive" direction (C), refined to be minimal,
   soothing and professional. Material You tonal color roles, seeded from the phone's wallpaper

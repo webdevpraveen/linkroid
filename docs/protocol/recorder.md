@@ -26,7 +26,7 @@ and optional `markers`:
   "b": {
     "id": "AbCdEfGhIjKlMnOpQrStUv",
     "files": [
-      { "name": "Recording 2026-10-07 14.32.m4a", "size": 194560 }
+      { "name": "Recording 2026-11-08 14.32.m4a", "size": 194560 }
     ],
     "recording": true,
     "markers": [
@@ -79,7 +79,7 @@ When a recording transfer (`recording: true`) completes on the PC:
    `.m4a` is kept in the Recordings folder.
 3. **Markers file:** When `markers` is non-empty, a companion UTF-8 text file
    `<stem>.markers.txt` (for example,
-   `Recording 2026-10-07 14.32.markers.txt`) is written next to the audio file,
+   `Recording 2026-11-08 14.32.markers.txt`) is written next to the audio file,
    one marker per line (`MM:SS.mmm  <label>` or `HH:MM:SS.mmm  <label>`;
    one without a label reads `Marker <n>`).
 4. **Notification:** A Windows toast `"Recording from <phone> saved"` is shown

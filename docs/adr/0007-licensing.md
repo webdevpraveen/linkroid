@@ -1,7 +1,7 @@
 # ADR 0007: Licensing
 
 - **Status:** Accepted
-- **Date:** 2026-10-05
+- **Date:** 2026-11-08
 
 ## Context
 

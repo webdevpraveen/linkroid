@@ -2,10 +2,6 @@
 
 Linkroid mirrors your phone's notifications to your PC in real time. You can read alerts, reply inline to messages, trigger notification action buttons, track live delivery or timer progress, copy one-time verification codes with one click, and dismiss notifications on both devices at once.
 
-<p align="center">
-  <img src="images/notifications-grouped.png" alt="Phone notifications grouped by app on the PC Home screen" width="760">
-</p>
-
 ## What You Need
 
 | Requirement | Details |
@@ -41,10 +37,6 @@ Notifications that report ongoing progress or live time stay pinned at the top o
 ### One-Time Verification Codes (OTPs)
 
 When an incoming notification or SMS contains a 4-to-8-digit one-time verification code:
-
-<p align="center">
-  <img src="images/notifications-otp.png" alt="One-time verification code detected with a Copy code button" width="760">
-</p>
 
 1. Linkroid extracts the verification code locally on your device and adds a prominent **Copy code (`123456`)** button to both the Windows notification popup and the notification card on Home.
 2. If you turn on **Copy one-time codes** in **Settings › General**, Linkroid copies the verification code to your PC clipboard automatically as soon as it arrives and shows a brief confirmation banner so you can press `Ctrl+V` straight into your browser.

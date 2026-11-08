@@ -9,7 +9,7 @@
 //!
 //! ```json
 //! { "schema": 1, "channel": "nightly", "version": "0.1.5-nightly.7",
-//!   "name": "Amber Clover", "published": "2026-11-03T10:17:00Z",
+//!   "name": "Amber Clover", "published": "2026-11-08T10:17:00Z",
 //!   "notes": "https://github.com/webdevpraveen/linkroid/releases/tag/v0.1.5-nightly.7",
 //!   "files": [{ "name": "Linkroid-0.1.5-nightly.7-x64-setup.exe",
 //!               "url": "https://github.com/webdevpraveen/linkroid/releases/download/…",
@@ -187,7 +187,7 @@ mod tests {
     #[test]
     fn real_json_parses() {
         let json = br#"{"schema":1,"channel":"nightly","version":"0.1.5-nightly.7","name":"Amber Clover",
-            "published":"2026-11-03T10:17:00Z","notes":"https://github.com/webdevpraveen/linkroid/releases/tag/v0.1.5-nightly.7",
+            "published":"2026-11-08T10:17:00Z","notes":"https://github.com/webdevpraveen/linkroid/releases/tag/v0.1.5-nightly.7",
             "files":[{"name":"Linkroid-0.1.5-nightly.7-android.apk",
             "url":"https://github.com/webdevpraveen/linkroid/releases/download/v0.1.5-nightly.7/Linkroid-0.1.5-nightly.7-android.apk",
             "sha256":"0000000000000000000000000000000000000000000000000000000000000000","size":12}],"later":"ignored"}"#;

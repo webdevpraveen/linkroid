@@ -869,10 +869,10 @@ mod tests {
         assert!(info_text.contains("DeletionDate=20"), "{info_text}");
 
         let formatted =
-            format_trashinfo(Path::new("/home/alice/My Files/test 100%.txt"), "2026-10-22T23:05:12");
+            format_trashinfo(Path::new("/home/alice/My Files/test 100%.txt"), "2026-11-08T23:05:12");
         assert_eq!(
             formatted,
-            "[Trash Info]\nPath=/home/alice/My%20Files/test%20100%25.txt\nDeletionDate=2026-10-22T23:05:12\n"
+            "[Trash Info]\nPath=/home/alice/My%20Files/test%20100%25.txt\nDeletionDate=2026-11-08T23:05:12\n"
         );
     }
 

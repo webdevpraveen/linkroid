@@ -2,10 +2,6 @@
 
 Linkroid transfers files and folders between your phone and PC at full local Wi-Fi or USB speed. Every transfer supports manual pause and resume, automatic recovery after a dropped connection, end-to-end BLAKE3 integrity verification, and an offline `Waiting to send` queue so nothing is lost when the other device is asleep or out of reach. You can also mount your phone's storage directly inside Windows File Explorer, browse your PC's folders from your phone, set up automatic folder sync, and share files with nearby LocalSend devices.
 
-<p align="center">
-  <img src="images/files-localsend.png" alt="File transfers and LocalSend in Linkroid for Windows" width="760">
-</p>
-
 ## What You Need
 
 | Feature | Requirements |
@@ -37,9 +33,9 @@ Received files on your phone are saved to `Download/Linkroid` (preserving subfol
 
    The share sheet's short row lists the apps you share to most, so Linkroid may not be in it the first time. Tap **More** (**Apps** on Samsung phones) and pick **Linkroid**. After that, Android usually shows it in the row.
 
-   ![Linkroid in the share sheet's full list of apps](images/android-share-more.png)
+   
 
-   ![Linkroid in the share sheet's short row after the first share](images/android-share-row.png)
+   
 2. **From the Linkroid app**: Open Linkroid on your phone and tap **Send files** or **Send a folder** under **Quick Transfer & Clipboard**.
 
 Received files on your PC are saved to `Downloads\Linkroid` (avoiding overwrites by adding a numeric suffix if a file with the same name already exists). If **Copy received files** is enabled in **Settings › General**, small received files are also placed on your Windows clipboard so you can paste them anywhere with `Ctrl+V`.
@@ -83,7 +79,7 @@ On Linux, Linkroid mounts your phone's storage as a folder you can open in any f
 1. Do steps 1 and 2 of the Windows instructions above on your phone (allow **All files access** or pick folders, then turn on **Browse this phone's storage** for your PC).
 2. On your PC, open **Settings › Devices**, select your phone, and turn on **File manager integration** (`storage`, off by default).
 
-   ![The File manager integration toggle and Open button for a paired phone in Settings › Devices](images/linux-file-manager-integration.png)
+   
 
 3. Linkroid mounts the phone at `~/Linkroid/<Phone name>` using FUSE, and adds a **<Phone name> (Linkroid)** bookmark for file managers that read GTK bookmarks (`~/.config/gtk-3.0/bookmarks`) or KDE places (`~/.local/share/user-places.xbel`).
 

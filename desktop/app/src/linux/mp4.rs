@@ -1246,7 +1246,7 @@ mod tests {
         assert!(name.starts_with("Recording "), "unexpected filename: {name}");
         assert!(name.ends_with(".mp4"), "unexpected filename: {name}");
         // "Recording YYYY-MM-DD HH.MM.SS.mp4" -> length 33
-        assert_eq!(name.len(), "Recording 2026-10-16 19.40.00.mp4".len());
+        assert_eq!(name.len(), "Recording 2026-11-08 19.40.00.mp4".len());
     }
 
     #[test]

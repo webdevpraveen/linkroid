@@ -1,7 +1,7 @@
 # ADR 0006: Kotlin + Jetpack Compose for the Android app
 
 - **Status:** Accepted
-- **Date:** 2026-10-05
+- **Date:** 2026-11-08
 
 ## Context
 

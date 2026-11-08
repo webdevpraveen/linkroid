@@ -2,10 +2,6 @@
 
 Linkroid streams your phone's screen to your PC in a dedicated window at up to 60 frames per second with hardware video encoding (H.264, H.265, or AV1) and live audio forwarding. Depending on your Android power level, you can view your screen, control it with your PC mouse and keyboard, open individual Android apps in their own desktop windows (`app window`), launch a full desktop layout (DeX mode), or reverse-mirror your PC's screen to your phone.
 
-<p align="center">
-  <img src="images/mirroring-window.png" alt="Phone screen mirrored in a window on Windows 11" width="760">
-</p>
-
 ## What You Need
 
 | Feature | Requirements |
@@ -57,16 +53,8 @@ The `mirror` window header includes quick controls and keyboard shortcuts:
 
 With `Elevated` on Android 11 or newer, you can run individual phone apps in separate Windows 11 windows without mirroring your whole phone screen:
 
-<p align="center">
-  <img src="images/app-window.png" alt="An Android app running in its own independent window on Windows 11" width="760">
-</p>
-
 1. Click **Apps** in the PC sidebar to see every app on your phone. You can also click **Open an app** on **Home**, or any phone notification in the feed, Notification history, or a Windows notification popup.
 2. **Apps** shows a **Recent** row (apps you opened from the PC and apps that recently posted notifications) above your phone's full app list. Type to search, and press Enter to open the first match. Apps already open on the PC are marked with a dot.
-
-<p align="center">
-  <img src="images/apps-page.png" alt="The Apps page on the PC listing the phone's apps" width="760">
-</p>
 
 3. Click any app. Linkroid creates an isolated virtual display on your phone and opens that app on your PC in its own `app window` with its own Windows taskbar icon.
 4. The app runs independently beside whatever is shown on your phone's physical screen, and typing from your PC does not pop up the on-screen soft keyboard on your phone.

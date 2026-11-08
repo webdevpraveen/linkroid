@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="assets/brand/icon.png" alt="" width="96" height="96">
+<img src="assets/brand/icon.png" alt="" width="196" height="196">
 
 # Linkroid
 
@@ -20,10 +20,6 @@ Feedback, bugs or ideas? DM me directly.
 [![Core: MPL-2.0](https://img.shields.io/badge/core-MPL--2.0-blue)](LICENSE)
 
 </div>
-
-<p align="center">
-  <img src="docs/screenshots/desktop-glass-home.png" alt="Linkroid for Windows: Home with the phone's notifications and music playing, Glass theme" width="880">
-</p>
 
 ## Why Linkroid
 
@@ -187,42 +183,16 @@ in light and dark. In English, German, Turkish, Simplified Chinese, Brazilian Po
 Details: [Privacy and security](docs/guide/privacy-and-security.md) and the
 [security model](docs/technical/security-model.md).
 
-## Screenshots
+## Themes & Customization
 
-**Hive** is an exclusive theme: warm amber, with a living geometric honeycomb that breathes
-behind the app.
+Linkroid features four crafted themes, designed for seamless desktop integration:
 
-| Hive, light | Hive, dark |
-|:---:|:---:|
-| <img src="docs/screenshots/desktop-hive-light.png" alt="Home in the Hive theme, light"> | <img src="docs/screenshots/desktop-hive-dark.png" alt="Home in the Hive theme, dark"> |
+- **Bloom**: Soft, vibrant Material You surfaces with automatic wallpaper and album artwork color extraction.
+- **Glass**: Frosted, translucent cards with specular light rims that float over your desktop background.
+- **Graphite**: High-contrast, minimal ink-on-paper monochrome surfaces (with pure `#000000` AMOLED support).
+- **Hive**: Warm amber accents with a living geometric honeycomb backdrop that animates smoothly.
 
-Also **Bloom**, soft and colorful; **Glass**, translucent cards over the
-Windows backdrop; and **Graphite**, ink on paper. All in light and dark.
-
-| Bloom | Glass | Graphite |
-|:---:|:---:|:---:|
-| <img src="docs/screenshots/desktop-bloom-home.png" alt="Home with notifications and music playing on the PC, Bloom theme"> | <img src="docs/screenshots/desktop-glass-home.png" alt="Home with notifications and music playing on the PC, Glass theme"> | <img src="docs/screenshots/desktop-graphite-home.png" alt="Home with notifications and music playing on the PC, Graphite theme"> |
-| <img src="docs/screenshots/desktop-bloom-settings.png" alt="Settings, Bloom theme"> | <img src="docs/screenshots/desktop-glass-settings.png" alt="Settings, Glass theme"> | <img src="docs/screenshots/desktop-graphite-settings.png" alt="Settings, Graphite theme, dark"> |
-
-<p align="center">
-  <img src="docs/screenshots/desktop-apps.png" alt="The Apps page with two phone apps open in their own windows" width="880"><br>
-  <sub>The phone's apps on the PC, each in a window of its own.</sub>
-</p>
-
-<p align="center">
-  <img src="docs/screenshots/desktop-messages.png" alt="Messages: a conversation from the phone, answered on the PC" width="880"><br>
-  <sub>The phone's texts on the PC.</sub>
-</p>
-
-<p align="center">
-  <img src="docs/screenshots/desktop-mirroring.png" alt="The phone's screen mirrored in a window next to Home" width="880"><br>
-  <sub>The whole phone screen in a window, with mouse and keyboard control.</sub>
-</p>
-
-<p align="center">
-  <img src="docs/screenshots/pairing-and-android.png" alt="Pairing a phone by QR code, next to the Android app's Home with the PC connected" width="880"><br>
-  <sub>Pairing by QR code, and the Android app once connected.</sub>
-</p>
+All themes support independent Light and Dark modes across both Windows and Android apps.
 
 ## How it works
 

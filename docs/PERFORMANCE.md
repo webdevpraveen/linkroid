@@ -106,7 +106,7 @@ Measured over a 10-second steady-state window on 12 logical cores (`release` bui
 
 ## 3. Scale Benchmark Measurements (`core/linkroid-core/tests/scale_tests.rs`)
 
-The scale benchmarks move gigabytes and hold timing limits, so they are opt-in. Measured with a release build on Windows 11 x64 on 2026-10-14:
+The scale benchmarks move gigabytes and hold timing limits, so they are opt-in. Measured with a release build on Windows 11 x64 on 2026-11-08:
 
 ```powershell
 cargo test -p linkroid-core --release --test scale_tests -- --ignored --nocapture

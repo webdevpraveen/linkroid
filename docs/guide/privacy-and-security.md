@@ -24,10 +24,6 @@ An unknown device on your Wi-Fi network can never read your notifications, clipb
 
 - **Pairing links opened from outside the app**: A `linkroid://pair` link that reaches the phone from a web page, another app, or the system camera never pairs on its own. The phone asks first, naming the PC, and pairs only after you tap **Pair**.
 
-<p align="center">
-  <img src="images/pair-link-prompt.png" alt="The phone asking Pair with Praveen? after a pairing link was opened" width="360">
-</p>
-
 Once paired, each device saves the peer's Ed25519 public key in its local SQLite trust store (`peers` table).
 
 **Install ID**: Each device also shares a 32-character install ID with the devices it pairs with. It is a salted BLAKE3 hash of the Android ID on the phone, or the Windows machine GUID or Linux machine ID on the PC, so the underlying identifier is never sent. It is used for one thing: when you reset and re-pair the same device, the old entry is replaced instead of left behind. Two different devices with the same name are never merged.

@@ -1,8 +1,8 @@
-# Linkroid: Product & Engineering Plan
+﻿# Linkroid: Product & Engineering Plan
 
 > **Linkroid** connects Android phones and Windows PCs. It's one open-source app that replaces Phone Link, KDE Connect, scrcpy, LocalSend and Intel Unison.
 > *Linkroid seamlessly connects and bridges everything between your Android phone and your PC.*
-> Status: **in active development (Qt Quick + Rust on Windows 11, Kotlin + Jetpack Compose on Android, shared Rust core).** Phase 1 and most of Phases 2 to 3 work end to end; see §3 for per-feature status. Last updated 2026-10-09.
+> Status: **in active development (Qt Quick + Rust on Windows 11, Kotlin + Jetpack Compose on Android, shared Rust core).** Phase 1 and most of Phases 2 to 3 work end to end; see §3 for per-feature status. Last updated 2026-11-08.
 
 ---
 
@@ -696,7 +696,7 @@ Each phase ends with a usable, releasable product. Phase sizes are relative; act
 
 ### 10.1 Name: **Linkroid** (done)
 - Repo: `github.com/webdevpraveen/linkroid` (private until most things work locally; no pushing before that).
-- Checks done: no conflicting products found on the web; `linkroid.app`, `linkroid.dev`, `getlinkroid.com` and the GitHub name were free (2026-10-05).
+- Checks done: no conflicting products found on the web; `linkroid.app`, `linkroid.dev`, `getlinkroid.com` and the GitHub name were free (2026-11-08).
 - **Still to do before any announcement:** official trademark searches (USPTO, TMview, IP India), register the domain, and setup project distribution channels.
 - History: Several candidate names were checked and rejected (Tandem, Skein, Murmur and others) before choosing Linkroid.
 
@@ -759,7 +759,7 @@ Each phase ends with a usable, releasable product. Phase sizes are relative; act
 ### Must resolve before writing code
 1. **Name clearance.** Trademark search for "Linkroid" in software classes (9 and 42) in the US, EU and India, then secure the domain, GitHub org and X handle. Do this *before* teasing the name to the X audience, because renaming after a public announcement is costly.
 2. **Signing-key custody.** The Android signing key is Linkroid's permanent identity: lose it and every user has to uninstall to update, and developer verification is tied to it. Generate it once, keep two offline backups, and store it as a CI secret. The same applies to the auto-update signing key.
-3. **Dev environment (done) (done 2026-10-04)**:
+3. **Dev environment (done) (done 2026-11-08)**:
    - Installed: Qt 6.12.0 (MSVC x64 + ARM64) in `C:\Qt`, Android NDK 30.0.16248370 + CMake 4.1.2, Android command-line tools, Rust targets (Android ×4, Windows ARM64), `cargo-ndk` 4.1.2.
    - Already present: Android platform 37, build-tools 36, platform-tools, Rust 1.99, MSVC Build Tools 2022, Node 24, Python 3.14.
    - Environment variables set: `JAVA_HOME` (Android Studio's JDK 25), `ANDROID_HOME`, `ANDROID_NDK_HOME`, `QMAKE`, plus PATH entries for the JDK, Qt, platform-tools and the Android CLI.

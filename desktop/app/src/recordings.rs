@@ -103,7 +103,7 @@ fn active_config() -> (PathBuf, RecordingFormat) {
     (effective_folder(cfg.folder.as_deref()), cfg.format)
 }
 
-/// Formats a recording's base name (`Recording 2026-10-07 14.32`).
+/// Formats a recording's base name (`Recording 2026-11-08 14.32`).
 pub fn format_recording_stem(year: u16, month: u16, day: u16, hour: u16, minute: u16) -> String {
     format!("Recording {year:04}-{month:02}-{day:02} {hour:02}.{minute:02}")
 }
@@ -135,7 +135,7 @@ pub fn current_recording_stem() -> String {
     }
 }
 
-/// The name the phone gave a recording (`Recording 2026-10-07 14.32`, from
+/// The name the phone gave a recording (`Recording 2026-11-08 14.32`, from
 /// when it started), so one that waited for the PC keeps its own time.
 /// `None` for anything else.
 pub fn stem_from_phone(name: &str) -> Option<String> {
@@ -143,7 +143,7 @@ pub fn stem_from_phone(name: &str) -> Option<String> {
     // The phone's own " (2)" for two in a minute goes; this folder numbers its own.
     let stem = stem.rsplit_once(" (").filter(|(_, n)| n.ends_with(')')).map_or(stem, |(s, _)| s);
     let time = stem.strip_prefix("Recording ")?;
-    let ok = time.len() == "2026-10-07 14.32".len()
+    let ok = time.len() == "2026-11-08 14.32".len()
         && time.chars().enumerate().all(|(i, c)| match i {
             4 | 7 => c == '-',
             10 => c == ' ',
@@ -1255,16 +1255,16 @@ mod tests {
     #[test]
     fn recordings_keep_the_phones_time() {
         assert_eq!(
-            stem_from_phone("Recording 2026-10-07 14.32.m4a").as_deref(),
-            Some("Recording 2026-10-07 14.32")
+            stem_from_phone("Recording 2026-11-08 14.32.m4a").as_deref(),
+            Some("Recording 2026-11-08 14.32")
         );
         assert_eq!(
-            stem_from_phone("Recording 2026-10-07 14.32 (2).m4a").as_deref(),
-            Some("Recording 2026-10-07 14.32")
+            stem_from_phone("Recording 2026-11-08 14.32 (2).m4a").as_deref(),
+            Some("Recording 2026-11-08 14.32")
         );
         assert_eq!(stem_from_phone("Recording ../../x.m4a"), None);
-        assert_eq!(stem_from_phone("Voice 2026-10-07 14.32.m4a"), None);
-        assert_eq!(stem_from_phone("Recording 2026-10-07 14.32 extra.m4a"), None);
+        assert_eq!(stem_from_phone("Voice 2026-11-08 14.32.m4a"), None);
+        assert_eq!(stem_from_phone("Recording 2026-11-08 14.32 extra.m4a"), None);
     }
 
     /// Builds a valid 48 kHz mono AAC-LC `.m4a` file for Media Foundation tests.
@@ -1448,21 +1448,21 @@ mod tests {
     #[test]
     fn naming_and_collision_avoidance_never_overwrite() {
         let dir = tempfile::tempdir().unwrap();
-        let stem = format_recording_stem(2026, 10, 7, 14, 32);
-        assert_eq!(stem, "Recording 2026-10-07 14.32");
+        let stem = format_recording_stem(2026, 11, 8, 14, 32);
+        assert_eq!(stem, "Recording 2026-11-08 14.32");
 
         let p1 = unique_recording_path(dir.path(), &stem, "m4a");
-        assert_eq!(p1, dir.path().join("Recording 2026-10-07 14.32.m4a"));
+        assert_eq!(p1, dir.path().join("Recording 2026-11-08 14.32.m4a"));
         fs::write(&p1, b"first").unwrap();
 
         let p2 = unique_recording_path(dir.path(), &stem, "m4a");
-        assert_eq!(p2, dir.path().join("Recording 2026-10-07 14.32 (2).m4a"));
+        assert_eq!(p2, dir.path().join("Recording 2026-11-08 14.32 (2).m4a"));
         fs::write(&p2, b"second").unwrap();
 
         // Even if only the marker file for (3) exists, (3) is skipped so it isn't overwritten.
-        fs::write(dir.path().join("Recording 2026-10-07 14.32 (3).markers.txt"), b"m").unwrap();
+        fs::write(dir.path().join("Recording 2026-11-08 14.32 (3).markers.txt"), b"m").unwrap();
         let p4 = unique_recording_path(dir.path(), &stem, "m4a");
-        assert_eq!(p4, dir.path().join("Recording 2026-10-07 14.32 (4).m4a"));
+        assert_eq!(p4, dir.path().join("Recording 2026-11-08 14.32 (4).m4a"));
     }
 
     #[test]
@@ -1502,7 +1502,7 @@ mod tests {
     #[test]
     fn media_foundation_converts_m4a_to_m4a_mp3_wav_and_flac_with_markers() {
         let dir = tempfile::tempdir().unwrap();
-        let stem = "Recording 2026-10-07 14.32";
+        let stem = "Recording 2026-11-08 14.32";
         let markers = vec![
             RecordingMarker { at_ms: 500, label: Some("Start".into()) },
             RecordingMarker { at_ms: 1_500, label: None },

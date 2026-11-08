@@ -2,10 +2,6 @@
 
 Linkroid lets your PC use your phone's cameras and audio hardware in four ways: streaming your phone's camera as a Windows webcam (`Linkroid Webcam`), snapping photos or scanning documents straight into your PC clipboard (**Continuity Camera**), playing your PC's system audio through your phone (**Phone as speaker**), and recording voice notes on your phone that land automatically on your PC (**Voice recorder**).
 
-<p align="center">
-  <img src="images/webcam-live.png" alt="Camera and Audio settings on Windows showing a live webcam preview from the phone" width="760">
-</p>
-
 ## What You Need
 
 | Feature | Requirements |
@@ -62,10 +58,6 @@ When you need to insert a photo of a physical object, whiteboard, or multi-corne
 ### 3. Phone as Speaker: Listening to PC Audio on Your Phone
 
 If your desktop PC lacks speakers, or you want to walk around the room while listening to your PC's music, video, or call audio through headphones plugged into your phone:
-
-<p align="center">
-  <img src="images/speaker-on.png" alt="Phone as speaker enabled on the PC Home screen" width="760">
-</p>
 
 1. Toggle **Phone as speaker** on from either side:
    - **On your PC**: Click **Phone as speaker** on the Home screen, or turn on **Stream PC audio to phone** in **Settings › Camera & Audio**.

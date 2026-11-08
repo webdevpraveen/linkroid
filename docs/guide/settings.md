@@ -2,10 +2,6 @@
 
 This page explains every setting in the PC app (Windows and Linux) and the Android app one by one, including its exact in-app label, default value, and what changing it does.
 
-<p align="center">
-  <img src="images/settings-appearance.png" alt="Categorized two-pane Settings screen in Linkroid for Windows" width="760">
-</p>
-
 ## Windows 11 App Settings
 
 On Windows, **Settings** uses a two-pane layout with 9 categories in the left navigation rail (or a scrollable top pill bar when the window is narrower than 680 pixels). Preferences are stored atomically in `%LOCALAPPDATA%\Linkroid\desktop-settings.json`, while per-device permissions live in your local SQLite database (`linkroid.db`).
@@ -49,10 +45,6 @@ Controls startup behavior, the system tray, `Linkroid Island`, battery notificat
 ### 3. Devices
 
 Lists your paired phones (with a device selector pill bar at the top when more than one phone is paired), a **Pair a new device** button, an **Unpair** button, and 19 per-device feature permission toggles grouped into three sections.
-
-<p align="center">
-  <img src="images/settings-devices.png" alt="Per-device feature permission toggles in Settings › Devices on Windows" width="760">
-</p>
 
 #### Group A: Calls, messages & notifications
 
@@ -148,19 +140,11 @@ Configures global Windows keyboard shortcuts and trigger-action automation rules
 | **Trigger-action rules** | Empty by default (includes quick buttons for **Lock PC on disconnect** and **Pause media on ring**) | Runs automated actions on your PC (`Lock this PC`, `Sleep this PC`, `Pause PC media`, `Resume PC media`, `Mute PC audio`, `Unmute PC audio`, `Show notification`, `Run command`) when a phone event occurs (`When phone connects`, `When phone disconnects`, `When phone rings`, `When call ends`, `When phone battery is low`, `When phone is charged`). |
 | **OBS Studio** | Port `4455`, no password | Where Deck tiles with `obs:` commands (`obs:record`, `obs:stream`, `obs:scene:<name>`) reach OBS's WebSocket server on this PC. Enter the password from OBS's **Tools › WebSocket Server Settings** and click **Save**; it is stored encrypted with Windows DPAPI. **Test connection** checks the port and password. |
 
-<p align="center">
-  <img src="images/settings-obs.png" alt="Shortcuts and Rules settings with the OBS Studio card" width="760">
-</p>
-
 ---
 
 ### 8. Storage & Privacy
 
 Displays live item counts and disk usage for every local history store and cache, with individual **Clear** buttons and a master **Clear everything** action.
-
-<p align="center">
-  <img src="images/settings-storage.png" alt="Storage and Privacy settings on Windows showing retention periods and Clear buttons" width="760">
-</p>
 
 | Setting | Retention / Default | What It Does |
 | :--- | :--- | :--- |
@@ -177,10 +161,6 @@ Displays live item counts and disk usage for every local history store and cache
 ### 9. Connection & About
 
 Provides network diagnostics, **Connect over mobile data**, Wake-on-LAN readiness, the local HTTP automation API, version info, logs, and updates.
-
-<p align="center">
-  <img src="images/settings-connection.png" alt="Connection and About settings on Windows" width="760">
-</p>
 
 | Setting | Default | What It Does |
 | :--- | :--- | :--- |
@@ -199,10 +179,6 @@ Provides network diagnostics, **Connect over mobile data**, Wake-on-LAN readines
 ## Android App Settings
 
 On Android, tap **Settings** in the floating bottom dock. You can view all settings at once (**All**) or filter by category chip at the top (**Appearance**, **Devices**, **Permissions**, **Features & Data**).
-
-<p align="center">
-  <img src="images/android-settings.png" alt="Settings screen in Linkroid for Android" width="760">
-</p>
 
 ### 1. Appearance
 
@@ -263,6 +239,3 @@ Each permission row shows its live state (**On** / **Allowed** vs **Off**) and a
 | **About › Update channel** | **Stable** (**Nightly** on a nightly build) | As on the PC. A paired PC tells the phone about new builds, so the phone rarely checks on its own: once a day on **Stable**, every six hours on **Nightly**, and when the app opens. |
 | **About › Install updates automatically** | **On** | Installs a newer build by itself. Android 12 and later install it without asking once Linkroid has installed an update before; otherwise a notification asks for one tap. Needs **Install unknown apps** allowed for Linkroid. |
 
-<p align="center">
-  <img src="images/android-update.png" alt="About in the Android app with Install updates automatically" width="360">
-</p>

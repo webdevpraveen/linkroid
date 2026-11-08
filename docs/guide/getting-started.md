@@ -63,10 +63,6 @@ When you open Linkroid for the first time on a new installation, a guided walkth
 
 ### PC Walkthrough Steps
 
-<p align="center">
-  <img src="images/walkthrough-pc.png" alt="First-run setup walkthrough on Windows" width="760">
-</p>
-
 1. **Welcome**: Introduces Linkroid and how your phone and PC work together.
 2. **Privacy Promise**: Summarizes Linkroid's local-first design: direct connections on your network, end-to-end encryption with device keys, and no user account or cloud server.
 3. **Install the Phone App**: Shows a scannable QR code linking directly to the Android APK if you do not have it installed yet.
@@ -75,16 +71,7 @@ When you open Linkroid for the first time on a new installation, a guided walkth
 6. **Optional PC Setup**: Checks Windows notification permission, the **Start with Windows** toggle, and your firewall rules through the `Connection Doctor`.
 7. **Done**: Opens the in-app **Features Guide**, which shows every feature, its live availability for your paired phone, and a **Show me** button that navigates straight to each control.
 
-<p align="center">
-  <img src="images/features-guide-pc.png" alt="In-app Features Guide on Windows" width="760">
-</p>
-
 ### Android Walkthrough Steps
-
-<p align="center">
-  <img src="images/walkthrough-android.png" alt="First-run setup walkthrough on Android" width="320">
-  <img src="images/features-guide-android.png" alt="In-app Features Guide on Android" width="320">
-</p>
 
 1. **Welcome**: Introduces the companion app.
 2. **Permissions**: Requests only the permissions you want to use, one at a time, with a plain explanation of why each is needed:
@@ -105,10 +92,6 @@ When you open Linkroid for the first time on a new installation, a guided walkth
 
 Linkroid supports three ways to `pair` your phone and PC. All three methods establish the same mutual Ed25519 cryptographic trust and end-to-end encrypted QUIC session.
 
-<p align="center">
-  <img src="images/pairing.png" alt="Pairing a phone by scanning the QR code shown on the PC" width="760">
-</p>
-
 ### Method 1: Scan the QR Code (Fastest on Wi-Fi)
 
 1. On your PC, open Linkroid. If no phone is paired yet, the pairing screen opens automatically. Otherwise, go to **Settings › Devices** and click **Pair a new device**.
@@ -126,10 +109,6 @@ Linkroid supports three ways to `pair` your phone and PC. All three methods esta
 ### Method 3: Plug in a USB Cable (Auto-Pair)
 
 If you have USB debugging (`adb`) enabled on your phone, Linkroid detects the phone as soon as you plug it into your PC with a USB cable. USB needs Android's `adb` on the PC with its server running: install Google's platform-tools and run `adb start-server` after each restart (Android Studio and scrcpy also start it). Linkroid doesn't start it itself.
-
-<p align="center">
-  <img src="images/usb-autopair.png" alt="USB auto-pair confirmation with 6-digit verification code on PC" width="760">
-</p>
 
 1. Connect your phone to your PC with a USB data cable and approve the Android **Allow USB debugging** prompt on your phone if asked.
 2. Linkroid sets up a local loopback tunnel over USB and automatically opens the 6-digit confirmation prompt on both the PC and the phone.
@@ -167,10 +146,6 @@ Android groups app capabilities into tiers of system access. Linkroid is designe
 ### How to Enable `Elevated` on Your Phone (Wireless Debugging)
 
 You can set up `Elevated` directly on your phone in about two minutes on Android 11 or newer:
-
-<p align="center">
-  <img src="images/wireless-debugging.png" alt="Setting up Elevated mode via Wireless Debugging in Linkroid for Android" width="760">
-</p>
 
 1. Open **Linkroid** on your phone and go to **Settings › Permissions › Control from your PC**.
 2. Next to **Real touch and keys**, tap **Set up**.

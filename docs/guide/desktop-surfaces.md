@@ -2,10 +2,6 @@
 
 Beyond the main window, Linkroid integrates into Windows 11 with fast, low-overhead desktop surfaces and automation tools: the slide-out **`Shelf`** edge panel, **`Linkroid Island`** at the top of your screen, the searchable cross-device **`Timeline`**, the global **`Command Palette`** (`Ctrl+Alt+Space`), rich **`Handoff`** for links, maps, videos, and documents, **`notify-when`** process completion alerts, a trigger-action **Rules Engine**, a local authenticated **HTTP API**, a **PowerToys Command Palette** extension, and the `linkroid` command-line client.
 
-<p align="center">
-  <img src="images/command-palette.png" alt="Global Command Palette open over the Linkroid window on Windows 11" width="760">
-</p>
-
 ## What You Need
 
 | Feature | Requirements |
@@ -24,10 +20,6 @@ Beyond the main window, Linkroid integrates into Windows 11 with fast, low-overh
 ### 1. The `Shelf` Slide-Out Edge Panel and Flick to Send
 
 The `Shelf` is a lightweight edge panel on your PC that gives you instant drag-and-drop access to your phone's recent items without switching windows or stealing keyboard focus from your current app:
-
-<p align="center">
-  <img src="images/shelf-panel.png" alt="The slide-out Shelf edge panel showing the latest photo, screenshot, clipboard item, and recent files" width="760">
-</p>
 
 1. Press **`Ctrl+Alt+S`** from any application (or flick a file toward the screen edge) to slide out the `Shelf`.
 2. The `Shelf` displays four live slots from your connected phone:
@@ -56,10 +48,6 @@ To set it up:
 ### 3. Cross-Device `Timeline`
 
 The `Timeline` gives you one searchable local log of everything that has moved between your phone and your PC:
-
-<p align="center">
-  <img src="images/timeline-page.png" alt="Timeline page on Windows showing files, clips, links, photos, and sessions grouped by day" width="760">
-</p>
 
 1. Click **Timeline** in the left navigation bar on your PC (or scroll to the **Timeline** card on the Android Home screen).
 2. Entries are grouped by day (**Today**, **Yesterday**, and earlier dates) and include:

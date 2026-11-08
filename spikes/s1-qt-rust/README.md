@@ -9,7 +9,7 @@ Run (needs Qt 6.12 on PATH and `QMAKE` set):
 ARM64: `$env:QMAKE = ./scripts/qmake-arm64.ps1` then
 `cargo build --release --target aarch64-pc-windows-msvc -p s1-qt-rust`
 
-## Results (2026-10-05, this machine, 144 Hz display, release build)
+## Results (2026-11-08, this machine, 144 Hz display, release build)
 
 | Criterion | Budget | Result | |
 |---|---|---|---|

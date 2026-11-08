@@ -1,7 +1,7 @@
 # ADR 0008: Platforms and distribution
 
 - **Status:** Accepted
-- **Date:** 2026-10-05
+- **Date:** 2026-11-08
 
 ## Context
 

@@ -699,7 +699,7 @@ mod tests {
         for code in ["482913", "G-482913", "123-456", "1234-5678", "123 456", "1234 5678"] {
             assert!(is_bare_code(code), "{code}");
         }
-        for text in ["123 4567", "12 34", "123  456", "abc 123", "2026-10-10"] {
+        for text in ["123 4567", "12 34", "123  456", "abc 123", "2026-11-08"] {
             assert!(!is_bare_code(text), "{text}");
         }
     }
@@ -726,7 +726,7 @@ mod tests {
             ("Use code 1234-5678", "12345678"),
             ("İstanbul: doğrulama kodunuz 482913", "482913"),
             // Disambiguation when dates, amounts, phone numbers, card/order numbers also appear
-            ("On 2026-10-08, your verification code is 482913.", "482913"),
+            ("On 2026-11-08, your verification code is 482913.", "482913"),
             ("Order #849201: use verification code 591024 at pickup.", "591024"),
             ("Transaction of Rs. 5000 on card ending 4321. Your OTP is 908172.", "908172"),
             ("Payment of $1200 to Acct 9988: enter passcode 445566 to authorize.", "445566"),
@@ -767,7 +767,7 @@ mod tests {
             "PIN 1,234 used",
             "Code applied: save 5000.00 INR today",
             // Dates & times
-            "Your login was recorded on 2026-10-08 at 12:30.",
+            "Your login was recorded on 2026-11-08 at 12:30.",
             "Verification completed on 10/08/2026.",
             "Your password was changed in October 2026.",
             // Phone numbers
@@ -800,7 +800,7 @@ mod tests {
         assert!(is_otp_clip(" G-482913 "));
         assert!(is_otp_clip("482-913"));
         assert!(is_otp_clip("1234-5678"));
-        assert!(!is_otp_clip("2026-10-08"));
+        assert!(!is_otp_clip("2026-11-08"));
         assert!(is_otp_clip("Your verification code is 482913"));
         assert!(!is_otp_clip("hello from phone"));
         assert!(!is_otp_clip("https://example.com/path/123456"));
@@ -827,7 +827,7 @@ mod tests {
             "G-482913",
             "123-456",
             "1234-5678",
-            "2026-10-10",
+            "2026-11-08",
             "+1 800-555-0199",
             "Rs. 5000",
             "$1200.50",

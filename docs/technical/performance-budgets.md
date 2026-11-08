@@ -21,7 +21,7 @@ Linkroid treats startup latency, idle resource consumption, UI frame pacing, and
 
 ### Scale Benchmarks (`linkroid-core`)
 
-The scale benchmarks move gigabytes of data and hold timing limits, so they are opt-in rather than part of every CI run. Measured with a release build on Windows 11 x64 (DPAPI key protection) on 2026-10-14:
+The scale benchmarks move gigabytes of data and hold timing limits, so they are opt-in rather than part of every CI run. Measured with a release build on Windows 11 x64 (DPAPI key protection) on 2026-11-08:
 
 ```powershell
 cargo test -p linkroid-core --release --test scale_tests -- --ignored --nocapture

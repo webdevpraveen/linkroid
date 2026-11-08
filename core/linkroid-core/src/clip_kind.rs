@@ -421,7 +421,7 @@ fn detect_phone_number(s: &str) -> Option<String> {
         }
     }
 
-    // Reject ISO or numeric dates like `2026-10-08` or `10-08-2026`.
+    // Reject ISO or numeric dates like `2026-11-08` or `10-08-2026`.
     let hyphen_parts: Vec<&str> = raw.split('-').collect();
     if hyphen_parts.len() == 3
         && hyphen_parts.iter().all(|p| p.bytes().all(|b| b.is_ascii_digit()))
@@ -944,7 +944,7 @@ mod tests {
             // SSN
             "123-45-6789",
             // Dates & times
-            "2026-10-08",
+            "2026-11-08",
             "08-10-2026",
             "2026.10.08",
             "10/08/2026",

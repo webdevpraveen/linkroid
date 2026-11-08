@@ -1,7 +1,7 @@
 # ADR 0004: CBOR as the wire format
 
 - **Status:** Accepted
-- **Date:** 2026-10-05
+- **Date:** 2026-11-08
 
 ## Context
 

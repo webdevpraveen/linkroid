@@ -2,10 +2,6 @@
 
 The **Messages** page on your PC brings together your phone's SMS and MMS text threads alongside **Unified Conversations** from RCS, WhatsApp, Telegram, Signal, and other messaging apps. You can read threads, search contacts, send texts and image attachments, schedule messages for later, copy verification codes, and filter spam from one inbox.
 
-<p align="center">
-  <img src="images/messages-inbox.png" alt="Messages page on Windows showing SMS threads and Unified Conversations from chat apps" width="760">
-</p>
-
 ## What You Need
 
 | Requirement | Details |
@@ -35,10 +31,6 @@ The **Messages** page on your PC brings together your phone's SMS and MMS text t
 ### Sending Picture Attachments (MMS)
 
 You can attach images to any SMS/MMS conversation in three ways:
-
-<p align="center">
-  <img src="images/messages-mms.png" alt="Previewing a pasted image attachment in the Messages composer before sending as MMS" width="760">
-</p>
 
 1. **Paste from clipboard**: Copy any image on your PC and press `Ctrl+V` inside the message composer.
 2. **Drag and drop**: Drag a `.png`, `.jpg`, `.webp`, or `.gif` image file from File Explorer or the `Shelf` onto the conversation pane.

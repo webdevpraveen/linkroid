@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
+﻿// SPDX-License-Identifier: GPL-3.0-or-later
 //! Play on phone for video files (docs/protocol/media.md §4): which file a
 //! desktop player on this PC plays. Players don't say, but Windows keeps a
 //! shortcut to every file opened lately (the Recent folder), and the
@@ -395,9 +395,9 @@ mod tests {
 
         let xbel = r#"<?xml version="1.0" encoding="UTF-8"?>
 <xbel version="1.0">
-  <bookmark href="file:///home/user/Documents/notes.txt" visited="2026-10-08T10:00:00Z"/>
-  <bookmark href="file:///home/user/Videos/Older%20Clip.mp4" visited="2026-10-07T09:00:00Z"/>
-  <bookmark href="file:///home/user/Videos/Newest%20Movie%202026.mkv" visited="2026-10-08T12:30:00Z"/>
+  <bookmark href="file:///home/user/Documents/notes.txt" visited="2026-11-08T10:00:00Z"/>
+  <bookmark href="file:///home/user/Videos/Older%20Clip.mp4" visited="2026-11-08T09:00:00Z"/>
+  <bookmark href="file:///home/user/Videos/Newest%20Movie%202026.mkv" visited="2026-11-08T12:30:00Z"/>
 </xbel>"#;
         let files = parse_xbel_recent_files(xbel);
         assert_eq!(

@@ -63,7 +63,7 @@ pub enum Congestion {
     /// Loss-based (RFC 9002, the QUIC specification's own), with gentler
     /// growth than Cubic. The default: on a Wi-Fi 6 network it moved files
     /// as fast as Cubic with about half the added delay for other traffic,
-    /// and without the dropped packets Cubic caused (2026-10-23).
+    /// and without the dropped packets Cubic caused (2026-11-08).
     NewReno,
 }
 
