@@ -1,4 +1,4 @@
-﻿{
+{
   description = "Linkroid - Android and Linux PC working as one";
 
   inputs = {
@@ -102,7 +102,10 @@ EOF
             install -Dm644 desktop/packaging/linux/com.webdevpraveen.linkroid.metainfo.xml $out/share/metainfo/com.webdevpraveen.linkroid.metainfo.xml
 
             # Icons
-            if [ -f assets/brand/icon.png ]; then
+            if [ -f assets/brand/icon-flat.svg ]; then
+              install -Dm644 assets/brand/icon-flat.svg $out/share/icons/hicolor/scalable/apps/linkroid.svg
+              install -Dm644 assets/brand/icon-flat.svg $out/share/pixmaps/linkroid.svg
+            elif [ -f assets/brand/icon.png ]; then
               install -Dm644 assets/brand/icon.png $out/share/icons/hicolor/scalable/apps/linkroid.svg
               install -Dm644 assets/brand/icon.png $out/share/pixmaps/linkroid.svg
             fi

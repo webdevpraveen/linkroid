@@ -54,7 +54,9 @@ done
 install -m 0644 "${SCRIPT_DIR}/linkroid.desktop" "${BUNDLE_DIR}/share/applications/linkroid.desktop"
 install -m 0644 "${SCRIPT_DIR}/com.webdevpraveen.linkroid.metainfo.xml" "${BUNDLE_DIR}/share/metainfo/com.webdevpraveen.linkroid.metainfo.xml"
 
-if [[ -f "${REPO_ROOT}/assets/brand/icon.png" ]]; then
+if [[ -f "${REPO_ROOT}/assets/brand/icon-flat.svg" ]]; then
+    install -m 0644 "${REPO_ROOT}/assets/brand/icon-flat.svg" "${BUNDLE_DIR}/share/icons/linkroid.svg"
+elif [[ -f "${REPO_ROOT}/assets/brand/icon.png" ]]; then
     install -m 0644 "${REPO_ROOT}/assets/brand/icon.png" "${BUNDLE_DIR}/share/icons/linkroid.svg"
 fi
 if [[ -f "${REPO_ROOT}/assets/brand/icon-512.png" ]]; then

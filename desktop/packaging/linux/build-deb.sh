@@ -81,12 +81,16 @@ done
 install -m 0644 "${SCRIPT_DIR}/linkroid.desktop" "${PKG_ROOT}/usr/share/applications/linkroid.desktop"
 install -m 0644 "${SCRIPT_DIR}/com.webdevpraveen.linkroid.metainfo.xml" "${PKG_ROOT}/usr/share/metainfo/com.webdevpraveen.linkroid.metainfo.xml"
 
-if [[ -f "${REPO_ROOT}/assets/brand/icon-512.png" ]]; then
-    install -m 0644 "${REPO_ROOT}/assets/brand/icon-512.png" "${PKG_ROOT}/usr/share/icons/hicolor/512x512/apps/linkroid.png"
-    install -m 0644 "${REPO_ROOT}/assets/brand/icon-512.png" "${PKG_ROOT}/usr/share/icons/hicolor/256x256/apps/linkroid.png"
+if [[ -f "${REPO_ROOT}/assets/brand/icon-flat.svg" ]]; then
+    install -m 0644 "${REPO_ROOT}/assets/brand/icon-flat.svg" "${PKG_ROOT}/usr/share/icons/hicolor/scalable/apps/linkroid.svg"
+elif [[ -f "${REPO_ROOT}/assets/brand/icon.png" ]]; then
+    install -m 0644 "${REPO_ROOT}/assets/brand/icon.png" "${PKG_ROOT}/usr/share/icons/hicolor/scalable/apps/linkroid.svg"
 fi
 if [[ -f "${REPO_ROOT}/assets/brand/icon.png" ]]; then
-    install -m 0644 "${REPO_ROOT}/assets/brand/icon.png" "${PKG_ROOT}/usr/share/icons/hicolor/scalable/apps/linkroid.svg"
+    install -m 0644 "${REPO_ROOT}/assets/brand/icon.png" "${PKG_ROOT}/usr/share/icons/hicolor/256x256/apps/linkroid.png"
+fi
+if [[ -f "${REPO_ROOT}/assets/brand/icon-512.png" ]]; then
+    install -m 0644 "${REPO_ROOT}/assets/brand/icon-512.png" "${PKG_ROOT}/usr/share/icons/hicolor/512x512/apps/linkroid.png"
 fi
 
 QT_DEPENDS=""
