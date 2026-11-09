@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-License-Identifier: GPL-3.0-or-later
 //! The release channels' feeds: one small JSON file per channel, which the
 //! release and nightly workflows publish on the repository's `channels`
 //! branch. Checking one is a conditional GET: while nothing changed, GitHub

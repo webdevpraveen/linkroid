@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-License-Identifier: GPL-3.0-or-later
 #ifdef LINKROID_BUILTIN_VIDEO
 #include "linux_video_builtin.h"
 #endif

@@ -1,4 +1,4 @@
-﻿[package]
+[package]
 name = "linkroid-core"
 description = "Linkroid engine: identity, pairing, sessions and storage"
 license = "MPL-2.0"

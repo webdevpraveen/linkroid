@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-License-Identifier: GPL-3.0-or-later
 //! Linux MP4 recording for mirrored phone screens and app windows.
 //!
 //! Video frames arrive as Annex-B H.264 access units and are muxed into an

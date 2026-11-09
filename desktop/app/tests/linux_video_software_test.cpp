@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-License-Identifier: GPL-3.0-or-later
 #include "../cpp/linux_video_codec.cpp"
 #include <cassert>
 #include <cstring>

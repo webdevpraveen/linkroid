@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: MPL-2.0
+// SPDX-License-Identifier: MPL-2.0
 use std::{fmt, path::PathBuf};
 
 use linkroid_protocol::messages::{DeviceInfo, PowerLevel};

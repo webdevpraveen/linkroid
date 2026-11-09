@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-License-Identifier: GPL-3.0-or-later
 //! `linkroid-ptrun`: PowerToys Command Palette / PowerToys Run bridge for
 //! Linkroid's Local Authenticated API (`docs/api.md`).
 //!

@@ -1,4 +1,4 @@
-﻿[package]
+[package]
 name = "linkroid-ptrun"
 description = "PowerToys Run & Command Palette extension helper for Linkroid"
 version = "0.0.1"

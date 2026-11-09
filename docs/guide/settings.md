@@ -1,4 +1,4 @@
-﻿# Settings Reference
+# Settings Reference
 
 This page explains every setting in the PC app (Windows and Linux) and the Android app one by one, including its exact in-app label, default value, and what changing it does.
 

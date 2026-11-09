@@ -1,4 +1,4 @@
-﻿# Linkroid PowerToys Command Palette / PowerToys Run Extension (`linkroid-ptrun`)
+# Linkroid PowerToys Command Palette / PowerToys Run Extension (`linkroid-ptrun`)
 
 `linkroid-ptrun` is a standalone, zero-dependency Rust helper that connects Windows launcher tools (PowerToys Command Palette, PowerToys Run, Flow Launcher, Raycast for Windows) to Linkroid's [Local Authenticated API](../../docs/api.md).
 

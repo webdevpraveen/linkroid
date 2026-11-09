@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-License-Identifier: GPL-3.0-or-later
 package com.webdevpraveen.linkroid.notifications
 
 import com.webdevpraveen.linkroid.core.LivePoint

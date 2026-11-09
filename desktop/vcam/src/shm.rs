@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-License-Identifier: GPL-3.0-or-later
 //! Shared-memory frame transport between `linkroid-desktop.exe` and
 //! `linkroid_vcam.dll`, plus placeholder frame rendering and RGB32/NV12
 //! conversion.

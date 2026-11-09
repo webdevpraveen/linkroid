@@ -1,4 +1,4 @@
-﻿# Releasing
+# Releasing
 
 How a version of Linkroid gets from `main` to people's devices, and how the
 apps update themselves afterwards.

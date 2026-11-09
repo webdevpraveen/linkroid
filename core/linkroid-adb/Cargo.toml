@@ -1,4 +1,4 @@
-﻿[package]
+[package]
 name = "linkroid-adb"
 description = "Pure-Rust ADB server client for Linkroid USB transport"
 license = "MPL-2.0"

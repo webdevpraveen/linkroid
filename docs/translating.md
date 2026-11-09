@@ -1,4 +1,4 @@
-﻿# Translating Linkroid
+# Translating Linkroid
 
 Linkroid's Android and Windows apps can be translated into any language.
 Simplified Chinese, German, Turkish and Brazilian Portuguese are complete today.

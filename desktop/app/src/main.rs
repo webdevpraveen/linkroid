@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-License-Identifier: GPL-3.0-or-later
 //! Linkroid for Windows.
 //!
 //! One process: Rust runs the core (`linkroid-core`) and OS integration,

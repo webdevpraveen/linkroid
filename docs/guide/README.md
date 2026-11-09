@@ -1,4 +1,4 @@
-﻿# Linkroid User Guide
+# Linkroid User Guide
 
 Linkroid connects your Android phone and your PC directly over your local network. It handles notifications, messages, calls, clipboard sharing, file transfers, photo browsing, screen mirroring, camera streaming, audio routing, and cross-device input in one open-source application.
 

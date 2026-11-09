@@ -1,4 +1,4 @@
-﻿# SPDX-License-Identifier: MPL-2.0
+# SPDX-License-Identifier: MPL-2.0
 [bindings.kotlin]
 package_name = "com.webdevpraveen.linkroid.core"
 cdylib_name = "linkroid_ffi"

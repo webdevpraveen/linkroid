@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-License-Identifier: GPL-3.0-or-later
 //! macOS media session integration stubs.
 
 use linkroid_core::{MediaAction, MediaError, MediaPlayer};

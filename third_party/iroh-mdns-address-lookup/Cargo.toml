@@ -1,4 +1,4 @@
-﻿# iroh-mdns-address-lookup 0.6.1 from crates.io with one Linkroid patch
+# iroh-mdns-address-lookup 0.6.1 from crates.io with one Linkroid patch
 # (see LINKROID.md). Used through [patch.crates-io] in the workspace root.
 [package]
 name = "iroh-mdns-address-lookup"

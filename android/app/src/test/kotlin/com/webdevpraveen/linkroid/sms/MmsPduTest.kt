@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-License-Identifier: GPL-3.0-or-later
 package com.webdevpraveen.linkroid.sms
 
 import com.webdevpraveen.linkroid.notifications.NotificationReader

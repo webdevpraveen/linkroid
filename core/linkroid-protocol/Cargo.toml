@@ -1,4 +1,4 @@
-﻿[package]
+[package]
 name = "linkroid-protocol"
 description = "Linkroid wire protocol: message types, framing and pairing primitives"
 license = "MPL-2.0"

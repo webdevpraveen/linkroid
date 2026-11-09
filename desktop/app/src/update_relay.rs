@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-License-Identifier: GPL-3.0-or-later
 //! New builds, passed between paired devices (`event.update`). The PC is
 //! plugged in and checks the feeds on a schedule; when it sees a build, it
 //! tells its phones, so they needn't check on their own. A phone that heard

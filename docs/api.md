@@ -1,4 +1,4 @@
-﻿# Linkroid Local Authenticated Automation API (`docs/api.md`)
+# Linkroid Local Authenticated Automation API (`docs/api.md`)
 
 Linkroid for Windows includes an opt-in, loopback-only HTTP/JSON API (`127.0.0.1:<port>`, default port `53320`) designed for local desktop automation tools:
 

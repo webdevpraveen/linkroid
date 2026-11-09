@@ -1,4 +1,4 @@
-﻿# Trademark policy
+# Trademark policy
 
 The Linkroid source code is open source, but the **Linkroid name and
 logo** are not covered by the software licenses. This policy exists so that

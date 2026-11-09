@@ -1,4 +1,4 @@
-﻿//! An address lookup service that uses an mdns-like service to discover and lookup the addresses of local endpoints.
+//! An address lookup service that uses an mdns-like service to discover and lookup the addresses of local endpoints.
 //!
 //! This allows you to use an mdns-like swarm discovery service to find address information about endpoints that are on your local network, no relay or outside internet needed.
 //! See the [`swarm-discovery`](https://crates.io/crates/swarm-discovery) crate for more details.

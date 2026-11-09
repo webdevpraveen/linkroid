@@ -1,4 +1,4 @@
-﻿[package]
+[package]
 name = "linkroid-ffi"
 description = "UniFFI bindings for linkroid-core (used by the Android app)"
 version.workspace = true

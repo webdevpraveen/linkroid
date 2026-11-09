@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-License-Identifier: GPL-3.0-or-later
 //! Play on phone for video files (docs/protocol/media.md §4): which file a
 //! desktop player on this PC plays. Players don't say, but Windows keeps a
 //! shortcut to every file opened lately (the Recent folder), and the
