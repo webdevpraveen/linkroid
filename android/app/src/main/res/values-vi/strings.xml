@@ -229,16 +229,9 @@
 <string name="battery_guide_pixel">Trên Pixel: mở Thông tin ứng dụng › Mức sử dụng pin của ứng dụng › chạm Cho phép sử dụng nền và chọn Không giới hạn.</string>
 <string name="action_manage">Quản lý</string>
 <string name="action_app_info">Thông tin ứng dụng</string>
-<string name="theme_hive">Hive</string>
-<string name="hive_invite_title">Thử Hive, chủ đề mới</string>
-<string name="hive_invite_text">Mật ong trên nền than hoặc sáp ấm, với tổ ong sống động phía sau ứng dụng. Đổi bất cứ lúc nào trong Cài đặt.</string>
-<string name="hive_invite_try">Thử Hive</string>
-<string name="hive_invite_dismiss">Để sau</string>
 <string name="star_channel">Dự án Linkroid</string>
 <string name="star_title">Thích Linkroid?</string>
 <string name="star_text">Chạm để gắn sao trên GitHub. Nó giúp nhiều người khác tìm thấy.</string>
-<string name="settings_comb_motion">Tổ ong động</string>
-<string name="settings_comb_motion_hint">Tổ ong thở và đập. Nó sẽ đứng yên khi bật Loại bỏ hiệu ứng động hoặc trình tiết kiệm pin.</string>
 <string name="theme_bloom">Bloom</string>
 <string name="theme_graphite">Graphite</string>
 <string name="mode_system">Hệ thống</string>

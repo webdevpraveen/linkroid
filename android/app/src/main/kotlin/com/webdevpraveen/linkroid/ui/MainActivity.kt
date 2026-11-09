@@ -787,7 +787,6 @@ private fun App(
                     val volumeKeysControlPc by preferences.volumeKeysControlPc.collectAsStateWithLifecycle()
                     val backgroundServiceEnabled by preferences.backgroundServiceEnabled.collectAsStateWithLifecycle()
                     val startWithoutAsking by com.webdevpraveen.linkroid.service.PcAutoStart.pcs(context).collectAsStateWithLifecycle()
-                    val hiveInviteShown by preferences.hiveInviteShown.collectAsStateWithLifecycle()
                     val saveableStateHolder = androidx.compose.runtime.saveable.rememberSaveableStateHolder()
 
                     // Only apply top scaffold padding here so LazyColumns in HomeScreen/SettingsScreen
@@ -907,12 +906,6 @@ private fun App(
                                     onOpenRecorder = { pcId -> recordPcId = pcId },
                                     onStopRecorder = { RecorderService.stop(context) },
                                     showWhatsNewGuideBanner = startupWalkthrough.showWhatsNewGuideBanner,
-                                    showHiveInvite = hiveInviteShown && appearance.theme != "hive",
-                                    onTryHive = {
-                                        preferences.answerHiveInvite()
-                                        preferences.update { it.copy(theme = "hive") }
-                                    },
-                                    onDismissHiveInvite = preferences::answerHiveInvite,
                                     backgroundServiceEnabled = backgroundServiceEnabled,
                                     onTurnOnBackgroundService = {
                                         preferences.updateBackgroundServiceEnabled(true)

@@ -325,15 +325,8 @@ private fun ColorScheme.toAmoledScheme(glass: Boolean): ColorScheme = copy(
     outlineVariant = if (glass) Color.White.copy(alpha = 0.12f) else Color(0xFF22252E),
 )
 
-/** Shapes from the tokens: Glass and Bloom are smoothly rounded, Hive a little firmer, Graphite crisp. */
-private fun shapes(graphite: Boolean, glass: Boolean, hive: Boolean) = when {
-    hive -> Shapes(
-        extraSmall = RoundedCornerShape(6.dp),
-        small = RoundedCornerShape(10.dp),
-        medium = RoundedCornerShape(14.dp),
-        large = RoundedCornerShape(18.dp),
-        extraLarge = RoundedCornerShape(24.dp),
-    )
+/** Shapes from the tokens: Glass and Bloom are smoothly rounded, Graphite crisp. */
+private fun shapes(graphite: Boolean, glass: Boolean, hive: Boolean = false) = when {
     graphite -> Shapes(
         extraSmall = RoundedCornerShape(2.dp),
         small = RoundedCornerShape(3.dp),
@@ -395,24 +388,16 @@ fun LinkroidTheme(
     }
     val graphite = appearance.theme == "graphite"
     val glass = appearance.theme == "glass"
-    // Hive keeps its own honey: no wallpaper, artwork or phone colors.
-    val hive = appearance.theme == "hive"
     val isBlackSwatch = !appearance.dynamicColor && appearance.seed == "black"
     val amoledActive = dark && appearance.amoled && (graphite || isBlackSwatch)
-    val error = when {
-        hive -> if (dark) Tokens.hiveCombError else Tokens.hiveWaxError
-        else -> if (dark) Tokens.errorDark else Tokens.errorLight
-    }
+    val error = if (dark) Tokens.errorDark else Tokens.errorLight
     val context = LocalContext.current
     // The settings alone pick the color source. Artwork applies only when the user turned
     // "Media artwork color" on; with nothing playing, it falls back to the wallpaper or preset.
-    val artworkSeed = if (!graphite && !hive && appearance.seed == "artwork") mediaSeedColor else null
-    val wallpaper = !graphite && !hive && appearance.dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
+    val artworkSeed = if (!graphite && appearance.seed == "artwork") mediaSeedColor else null
+    val wallpaper = !graphite && appearance.dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
     val wallpaperSeed = rememberWallpaperSeed(enabled = wallpaper && artworkSeed == null)
     val baseScheme = when {
-        hive -> remember(dark, error) {
-            (if (dark) Tokens.hiveComb else Tokens.hiveWax).toScheme(dark, error)
-        }
         graphite -> remember(dark, error) {
             (if (dark) Tokens.graphiteSlate else Tokens.graphitePaper).toScheme(dark, error)
         }
@@ -427,12 +412,9 @@ fun LinkroidTheme(
             (if (dark) seed.dark else seed.light).toScheme(dark, error)
         }
     }
-    val combBehind = hive && backdrop
-    val targetScheme = remember(baseScheme, glass, dark, amoledActive, combBehind) {
+    val targetScheme = remember(baseScheme, glass, dark, amoledActive) {
         val withGlass = if (glass) baseScheme.toGlassScheme(dark) else baseScheme
-        val withAmoled = if (amoledActive) withGlass.toAmoledScheme(glass) else withGlass
-        // Screens let the comb show through; the window paints the surface under it.
-        if (combBehind) withAmoled.copy(background = Color.Transparent) else withAmoled
+        if (amoledActive) withGlass.toAmoledScheme(glass) else withGlass
     }
     val reducedMotion = rememberReducedMotion()
     val powerSaver = rememberPowerSaver()
@@ -450,34 +432,22 @@ fun LinkroidTheme(
     }
     val assets = context.assets
     val fonts = remember(assets) { AppFonts(assets) }
-    val currentShapes = remember(graphite, glass, hive) { shapes(graphite, glass, hive) }
+    val currentShapes = remember(graphite, glass) { shapes(graphite, glass) }
     val currentTypography = remember(fonts, graphite) { typography(fonts, graphite) }
     CompositionLocalProvider(
         LocalAppFonts provides fonts,
         LocalReducedMotion provides reducedMotion,
         LocalGlassTheme provides glass,
         LocalAmoledTheme provides amoledActive,
-        LocalHiveTheme provides hive,
     ) {
         MaterialTheme(
             colorScheme = targetScheme,
             shapes = currentShapes,
             typography = currentTypography,
         ) {
-            // The content stays in one place for every theme: calling it from
-            // separate branches would rebuild the whole app on a switch to or
-            // from Hive, losing state such as the selected tab.
             androidx.compose.foundation.layout.Box(
-                androidx.compose.ui.Modifier.fillMaxSize().then(
-                    if (combBehind) androidx.compose.ui.Modifier.background(baseScheme.surface) else androidx.compose.ui.Modifier,
-                ),
+                androidx.compose.ui.Modifier.fillMaxSize(),
             ) {
-                if (combBehind) {
-                    HiveComb(
-                        dark = dark,
-                        animate = appearance.combMotion && !reducedMotion && !powerSaver,
-                    )
-                }
                 content()
             }
         }

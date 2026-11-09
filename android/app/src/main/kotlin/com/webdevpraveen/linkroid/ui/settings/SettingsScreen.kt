@@ -259,7 +259,6 @@ fun SettingsScreen(
                     Label(stringResource(R.string.settings_theme))
                     Choice(
                         listOf(
-                            "hive" to stringResource(R.string.theme_hive),
                             "bloom" to stringResource(R.string.theme_bloom),
                             "glass" to "Glass",
                             "graphite" to stringResource(R.string.theme_graphite),
@@ -290,26 +289,6 @@ fun SettingsScreen(
                             language,
                         ) { value ->
                             if (value == "" || value == "en") AppLanguage.set(context, value) else pickLanguage = true
-                        }
-                    }
-                    if (appearance.theme == "hive") {
-                        SettingRowDivider()
-                        val combTitle = stringResource(R.string.settings_comb_motion)
-                        Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()) {
-                            Column(Modifier.weight(1f).padding(end = 12.dp)) {
-                                Text(combTitle, style = MaterialTheme.typography.titleSmall)
-                                Text(
-                                    stringResource(R.string.settings_comb_motion_hint),
-                                    style = MaterialTheme.typography.bodySmall,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                )
-                            }
-                            Switch(
-                                checked = appearance.combMotion,
-                                onCheckedChange = { on -> onAppearance { it.copy(combMotion = on) } },
-                                colors = com.webdevpraveen.linkroid.ui.theme.linkroidSwitchColors(),
-                                modifier = Modifier.semantics { contentDescription = combTitle },
-                            )
                         }
                     }
                     if (appearance.theme == "graphite" && appearance.mode != "light") {

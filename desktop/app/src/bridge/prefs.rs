@@ -398,7 +398,7 @@ impl cxx_qt::Initialize for qobject::Preferences {
         let settings = Settings::load(&core_host::host().data_dir);
         settings.apply_runtime();
         self.as_mut().set_theme(QString::from(match settings.theme {
-            Theme::Hive => "hive",
+            Theme::Hive => "bloom",
             Theme::Bloom => "bloom",
             Theme::Glass => "glass",
             Theme::Graphite => "graphite",
@@ -830,7 +830,7 @@ impl qobject::Preferences {
         }
         let disk = Settings::load(&core_host::host().data_dir);
         let disk_theme = QString::from(match disk.theme {
-            Theme::Hive => "hive",
+            Theme::Hive => "bloom",
             Theme::Bloom => "bloom",
             Theme::Glass => "glass",
             Theme::Graphite => "graphite",
@@ -1123,7 +1123,7 @@ impl qobject::Preferences {
         let (win_screen, win_x, win_y, win_w, win_h, win_max) = crate::settings::window_geometry();
         Settings {
             theme: match String::from(&p.theme).as_str() {
-                "hive" => Theme::Hive,
+                "hive" => Theme::Bloom,
                 "graphite" => Theme::Graphite,
                 "glass" | "blurry" => Theme::Glass,
                 _ => Theme::Bloom,

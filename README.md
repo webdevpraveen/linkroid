@@ -28,7 +28,7 @@ Fast, local-first, peer-to-peer encrypted. No accounts. No cloud. 100% Free & Op
 * **📁 Native Storage in File Explorer**: Mount your phone's storage directly into Windows File Explorer or Linux file managers.
 * **📱 Low-Latency Screen Mirroring**: Stream your phone screen at up to 60fps with audio, or open individual Android apps in standalone PC windows (`app window`).
 * **📷 Webcam & Continuity Camera**: Use your phone as a high-definition webcam for Zoom, Teams, Meet, or OBS. Snap photos or scan documents straight onto your PC clipboard.
-* **🎨 Modern Themes**: Choose between **Bloom** (Material You), **Glass** (translucent frosted acrylic), **Graphite** (minimal monochrome / AMOLED), or **Hive** (warm amber).
+* **🎨 Modern Themes**: Choose between **Bloom** (Material You), **Glass** (translucent frosted acrylic), or **Graphite** (minimal monochrome / AMOLED).
 
 ---
 

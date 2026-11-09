@@ -1,29 +1,20 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-//! The Linkroid mark (`assets/brand/icon.png`): two loops,
-//! the phone and the PC, around the center node, tilted like dynamic link
-//! run, on an espresso tile with a warm glow. Drawn in code at any pixel
+//! The Linkroid mark (`assets/brand/icon.png`): two interlocking device loops,
+//! the Android mobile phone (vertical loop in Android Green) and the PC desktop
+//! (horizontal loop in Electric Blue), interlocked around a central connection nexus,
+//! on a deep obsidian slate tile with an electric cyan/blue glow. Drawn in code at any pixel
 //! size: the tray, window and toast icons at runtime, and the executable's
 //! icon at build time (`build.rs` includes this file), so every size is sharp
-//! without bitmap assets. At 32 px and below the strokes are heavier and the
-//! tile fills more of the square, as in the hand-tuned small sizes.
+//! without bitmap assets.
 
-/// Espresso tile, its glow, the amber rim, and the two loops and the accent
-/// (docs/design/tokens.json, Amber palette).
-const TILE: [f32; 3] = rgb(0x2C, 0x16, 0x00);
-const GLOW: [f32; 3] = rgb(0x69, 0x3C, 0x00);
-const RIM: [f32; 3] = rgb(0xFF, 0xB9, 0x5F);
-const PHONE: [f32; 3] = rgb(0xFF, 0xF8, 0xF3);
-const PC: [f32; 3] = rgb(0xFF, 0xDD, 0xB8);
-const LINKROID_ACCENT: [f32; 3] = rgb(0xFF, 0xB9, 0x5F);
-
-/// The loops in a 100×100 design grid, before the tilt: each is two cubic
-/// Béziers (start, control, control, end, control, control, end).
-const LEFT_LOOP: [(f32, f32); 7] =
-    [(41.5, 42.5), (26.0, 24.0), (13.5, 31.0), (13.5, 50.0), (13.5, 69.0), (26.0, 76.0), (41.5, 57.5)];
-const RIGHT_LOOP: [(f32, f32); 7] =
-    [(58.5, 42.5), (74.0, 24.0), (86.5, 31.0), (86.5, 50.0), (86.5, 69.0), (74.0, 76.0), (58.5, 57.5)];
-/// The tilt, degrees (counterclockwise on screen).
-const TILT: f32 = -25.0;
+/// Deep obsidian slate tile, its electric cyan glow, the cyan rim, the Android phone loop,
+/// the PC loop, and the central connection nexus.
+const TILE: [f32; 3] = rgb(0x0B, 0x13, 0x2B);
+const GLOW: [f32; 3] = rgb(0x02, 0x84, 0xC7);
+const RIM: [f32; 3] = rgb(0x38, 0xBD, 0xF8);
+const PHONE: [f32; 3] = rgb(0x00, 0xE6, 0x76);
+const PC: [f32; 3] = rgb(0x00, 0x91, 0xFF);
+const LINKROID_ACCENT: [f32; 3] = rgb(0x38, 0xBD, 0xF8);
 
 /// Supersampling grid per pixel (SS×SS samples) for smooth edges.
 const SS: usize = 4;
@@ -32,20 +23,54 @@ const fn rgb(r: u8, g: u8, b: u8) -> [f32; 3] {
     [r as f32, g as f32, b as f32]
 }
 
-/// Sizes in the design grid: the small sizes are drawn bolder.
+/// Distance from (x, y) to the centerline of the vertical Phone rounded rectangle loop.
+fn distance_to_phone(x: f32, y: f32) -> f32 {
+    let cx = 37.0;
+    let cy = 50.0;
+    let hw = 15.0;
+    let hh = 26.0;
+    let r = 8.0;
+    let dx = (x - cx).abs() - (hw - r);
+    let dy = (y - cy).abs() - (hh - r);
+    let qx = dx.max(0.0);
+    let qy = dy.max(0.0);
+    let dist_outside = (qx * qx + qy * qy).sqrt();
+    let dist_inside = dx.max(dy).min(0.0);
+    let sdf = dist_outside + dist_inside - r;
+    sdf.abs()
+}
+
+/// Distance from (x, y) to the centerline of the horizontal PC desktop rounded rectangle loop.
+fn distance_to_pc(x: f32, y: f32) -> f32 {
+    let cx = 63.0;
+    let cy = 50.0;
+    let hw = 24.0;
+    let hh = 15.0;
+    let r = 6.0;
+    let dx = (x - cx).abs() - (hw - r);
+    let dy = (y - cy).abs() - (hh - r);
+    let qx = dx.max(0.0);
+    let qy = dy.max(0.0);
+    let dist_outside = (qx * qx + qy * qy).sqrt();
+    let dist_inside = dx.max(dy).min(0.0);
+    let sdf = dist_outside + dist_inside - r;
+    sdf.abs()
+}
+
+/// Sizes in the design grid: small sizes are drawn with slightly heavier stroke.
 struct Geometry {
     inset: f32,
     corner: f32,
     stroke: f32,
-    drop: f32,
+    node_radius: f32,
 }
 
 impl Geometry {
     fn for_size(size: usize) -> Self {
         if size <= 32 {
-            Geometry { inset: 2.0, corner: 20.0, stroke: 11.4, drop: 8.8 }
+            Geometry { inset: 2.0, corner: 20.0, stroke: 8.5, node_radius: 6.5 }
         } else {
-            Geometry { inset: 4.0, corner: 22.0, stroke: 10.4, drop: 8.2 }
+            Geometry { inset: 4.0, corner: 22.0, stroke: 7.5, node_radius: 5.5 }
         }
     }
 }
@@ -54,9 +79,6 @@ impl Geometry {
 pub fn render(size: usize) -> Vec<u8> {
     let g = Geometry::for_size(size);
     let unit = 100.0 / size as f32;
-    let left = polyline(&LEFT_LOOP);
-    let right = polyline(&RIGHT_LOOP);
-    let (sin, cos) = (-TILT.to_radians()).sin_cos();
     // The rim is at least about a pixel wide, so the tile keeps an edge on dark taskbars.
     let rim = (1.5f32).max(unit * 0.6);
 
@@ -75,21 +97,35 @@ pub fn render(size: usize) -> Vec<u8> {
                         continue;
                     }
                     covered += 1;
-                    // Undo the tilt to test against the upright loops.
+
                     let (dx, dy) = (x - 50.0, y - 50.0);
-                    let (ux, uy) = (50.0 + dx * cos - dy * sin, 50.0 + dx * sin + dy * cos);
+                    let dist_center = (dx * dx + dy * dy).sqrt();
                     let half = g.stroke / 2.0;
-                    let paint = if (dx * dx + dy * dy).sqrt() <= g.drop {
+
+                    let d_phone = distance_to_phone(x, y);
+                    let d_pc = distance_to_pc(x, y);
+
+                    let in_phone = d_phone <= half;
+                    let in_pc = d_pc <= half;
+
+                    let paint = if dist_center <= g.node_radius {
                         LINKROID_ACCENT
-                    } else if distance_to(&left, (ux, uy)) <= half {
+                    } else if in_phone && in_pc {
+                        // Interlocking weave: Phone on top above center, PC on top below
+                        if y < 50.0 {
+                            PHONE
+                        } else {
+                            PC
+                        }
+                    } else if in_phone {
                         PHONE
-                    } else if distance_to(&right, (ux, uy)) <= half {
+                    } else if in_pc {
                         PC
                     } else if -edge <= rim {
                         mix(TILE, RIM, 0.34)
                     } else {
-                        // The glow fades from the middle to the tile color at 40 units.
-                        let t = ((dx * dx + dy * dy).sqrt() / 40.0).min(1.0);
+                        // The glow fades from the middle to the tile color at 42 units.
+                        let t = (dist_center / 42.0).min(1.0);
                         mix(GLOW, TILE, t)
                     };
                     for c in 0..3 {
@@ -129,40 +165,6 @@ fn rounded_square_distance(x: f32, y: f32, inset: f32, r: f32) -> f32 {
     (qx * qx + qy * qy).sqrt() - r
 }
 
-/// A loop's two Béziers as points close enough together to measure against.
-fn polyline(loop_points: &[(f32, f32); 7]) -> Vec<(f32, f32)> {
-    const STEPS: usize = 32;
-    let mut points = Vec::with_capacity(STEPS * 2 + 1);
-    for segment in [&loop_points[0..4], &loop_points[3..7]] {
-        for step in 0..=STEPS {
-            if step == 0 && !points.is_empty() {
-                continue;
-            }
-            let t = step as f32 / STEPS as f32;
-            let u = 1.0 - t;
-            let (a, b, c, d) = (segment[0], segment[1], segment[2], segment[3]);
-            let w = [u * u * u, 3.0 * u * u * t, 3.0 * u * t * t, t * t * t];
-            points.push((
-                w[0] * a.0 + w[1] * b.0 + w[2] * c.0 + w[3] * d.0,
-                w[0] * a.1 + w[1] * b.1 + w[2] * c.1 + w[3] * d.1,
-            ));
-        }
-    }
-    points
-}
-
-fn distance_to(polyline: &[(f32, f32)], p: (f32, f32)) -> f32 {
-    polyline.windows(2).map(|w| dist_to_segment(p, w[0], w[1])).fold(f32::INFINITY, f32::min)
-}
-
-fn dist_to_segment(p: (f32, f32), a: (f32, f32), b: (f32, f32)) -> f32 {
-    let (dx, dy) = (b.0 - a.0, b.1 - a.1);
-    let len2 = dx * dx + dy * dy;
-    let t = if len2 == 0.0 { 0.0 } else { (((p.0 - a.0) * dx + (p.1 - a.1) * dy) / len2).clamp(0.0, 1.0) };
-    let (qx, qy) = (a.0 + t * dx, a.1 + t * dy);
-    ((p.0 - qx).powi(2) + (p.1 - qy).powi(2)).sqrt()
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -179,7 +181,7 @@ mod tests {
         assert_eq!(img.len(), size * size * 4);
         assert_eq!(pixel(&img, size, 0, 0)[3], 0, "rounded corner");
         let middle = pixel(&img, size, 32, 32);
-        assert_eq!(middle, [0xFF, 0xB9, 0x5F, 255], "the center node");
+        assert_eq!(middle, [0x38, 0xBD, 0xF8, 255], "the center node");
         // Near the top edge, between the loops: the dark tile.
         let tile = pixel(&img, size, 32, 8);
         assert!(tile[0] < 0x80 && tile[3] == 255, "{tile:?}");
@@ -189,10 +191,10 @@ mod tests {
     fn both_loops_are_drawn() {
         let size = 128;
         let img = render(size);
-        let light = |p: [u8; 4]| p[0] > 0xF0 && p[3] == 255;
-        // Somewhere left and right of the drop there's loop ink.
-        let left = (8..56).any(|x| light(pixel(&img, size, x, 64)) || light(pixel(&img, size, x, 70)));
-        let right = (72..120).any(|x| light(pixel(&img, size, x, 64)) || light(pixel(&img, size, x, 58)));
+        let colored = |p: [u8; 4]| (p[1] > 0xC0 || p[2] > 0xC0) && p[3] == 255;
+        // Somewhere left and right of the center node there's loop ink.
+        let left = (8..56).any(|x| colored(pixel(&img, size, x, 64)) || colored(pixel(&img, size, x, 70)));
+        let right = (72..120).any(|x| colored(pixel(&img, size, x, 64)) || colored(pixel(&img, size, x, 58)));
         assert!(left && right);
     }
 

@@ -346,9 +346,8 @@ NativeWindow {
     // through before it's there reveals the bare desktop (a flash), so the
     // window turns translucent only once the backdrop is in place, and opaque again
     // before it is removed.
-    // Hive keeps its own fixed colors, so it never shows the wallpaper through.
     // Windows 10 has no backdrop: the window stays opaque there.
-    readonly property bool wantBackdrop: Qt.platform.os === "windows" && systemBackdropSupported && (Preferences.backdrop || Theme.glass) && !Theme.amoled && !Theme.hive
+    readonly property bool wantBackdrop: Qt.platform.os === "windows" && systemBackdropSupported && (Preferences.backdrop || Theme.glass) && !Theme.amoled
     property bool micaApplied: false
     property bool micaVisible: false
     backdrop: micaApplied
@@ -408,7 +407,7 @@ NativeWindow {
 
     // Window background: a tinted veil of the theme over Mica/Acrylic (so the
     // theme's seed color is rich and clear), opaque otherwise.
-    readonly property color windowSurface: Theme.graphite || Theme.amoled || Theme.hive
+    readonly property color windowSurface: Theme.graphite || Theme.amoled
         ? Theme.surface
         : Qt.tint(
             Theme.surface,
@@ -432,40 +431,6 @@ NativeWindow {
         Behavior on color { ColorAnimation { duration: Theme.fadeNormal } }
     }
 
-    // Hive: the living comb behind everything, growing from the logo. It
-    // holds its frame while the window isn't in front or is minimized.
-    HiveBackdrop {
-        id: hiveComb
-        anchors.fill: parent
-        visible: opacity > 0
-        opacity: Theme.hive ? 1 : 0
-        Behavior on opacity {
-            enabled: !Theme.reduceMotion
-            NumberAnimation { duration: 420; easing.type: Easing.OutCubic }
-        }
-        animate: Theme.combMotion
-        ownClock: false
-        time: Theme.combTime
-        cell: Theme.comb.cell
-        frameMs: Theme.comb.frameMs
-        breathSeconds: Theme.comb.breathSeconds
-        pulseSeconds: Theme.comb.pulseSeconds
-        lineColor: Theme.combLine
-        glowColor: Theme.combGlow
-        // The center of the logo mark in the rail; the comb and its pulses
-        // carry across the whole window.
-        origin: Qt.point(Theme.railWidth / 2, Theme.topBarHeight / 2)
-        reach: 2.4
-        pulseReach: 1.05
-    }
-
-    // The comb's clock runs while this window is in front and showing Hive.
-    Binding {
-        target: Theme
-        property: "combClockRunning"
-        value: window.active && window.visible
-               && window.visibility !== Window.Minimized && window.visibility !== Window.Hidden
-    }
 
     // Dynamic native GPU-blurred ambient layer when "Glass" theme mode is active.
     Item {
@@ -868,10 +833,7 @@ NativeWindow {
             width: parent.width
             clip: true
             topLeftRadius: 18
-            // Hive: lets the comb show faintly through, under opaque cards.
-            color: Theme.hive
-                ? Qt.rgba(Theme.surfaceContainerLow.r, Theme.surfaceContainerLow.g, Theme.surfaceContainerLow.b, Theme.dark ? 0.50 : 0.58)
-                : Theme.amoled
+            color: Theme.amoled
                 ? "#07080C"
                 : (Theme.glass
                     ? Qt.rgba(Theme.surfaceContainerLow.r, Theme.surfaceContainerLow.g, Theme.surfaceContainerLow.b, Theme.dark ? 0.34 : 0.46)

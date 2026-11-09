@@ -230,16 +230,9 @@
     <string name="battery_guide_pixel">Pixel\'de: Uygulama bilgileri › Uygulama pil kullanımı bölümünü açın, Arka plan kullanımına izin ver\'e dokunun ve Kısıtlanmamış\'ı seçin.</string>
     <string name="action_manage">Yönet</string>
     <string name="action_app_info">Uygulama bilgileri</string>
-    <string name="theme_hive">Hive</string>
-    <string name="hive_invite_title">Yeni tema Hive\'ı deneyin</string>
-    <string name="hive_invite_text">Kömür karası üzerinde bal ya da sıcak balmumu tonları, uygulamanın arkasında canlı bir petekle. İstediğiniz zaman Ayarlar\'dan değiştirin.</string>
-    <string name="hive_invite_try">Hive\'ı dene</string>
-    <string name="hive_invite_dismiss">Şimdi değil</string>
     <string name="star_channel">Linkroid projesi</string>
     <string name="star_title">Linkroid\'i beğendin mi?</string>
     <string name="star_text">GitHub\'da yıldızlamak için dokun. Başkalarının bulmasına yardımcı olur.</string>
-    <string name="settings_comb_motion">Hareketli petek</string>
-    <string name="settings_comb_motion_hint">Petek nefes alır ve atar. Animasyonları kaldır veya pil tasarrufu açıkken durağan kalır.</string>
     <string name="theme_bloom">Bloom</string>
     <string name="theme_graphite">Graphite</string>
     <string name="mode_system">Sistem</string>

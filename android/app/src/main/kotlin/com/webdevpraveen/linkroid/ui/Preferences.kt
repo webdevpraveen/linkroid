@@ -41,21 +41,6 @@ class Preferences(context: Context) {
         prefs.registerOnSharedPreferenceChangeListener(preferenceChangeListener)
     }
 
-    /**
-     * The invitation to try Hive shows until it's answered, and again after
-     * an update (a reinstall clears this anyway): it remembers the version
-     * that answered it.
-     */
-    private val _hiveInviteShown = MutableStateFlow(
-        prefs.getLong(HIVE_INVITE_ANSWERED, -1L) != com.webdevpraveen.linkroid.BuildConfig.VERSION_CODE.toLong(),
-    )
-    val hiveInviteShown: StateFlow<Boolean> = _hiveInviteShown.asStateFlow()
-
-    fun answerHiveInvite() {
-        prefs.edit { putLong(HIVE_INVITE_ANSWERED, com.webdevpraveen.linkroid.BuildConfig.VERSION_CODE.toLong()) }
-        _hiveInviteShown.value = false
-    }
-
     private val _walkthrough = MutableStateFlow(loadWalkthrough())
     val walkthrough: StateFlow<WalkthroughPersistence> = _walkthrough.asStateFlow()
 
@@ -144,7 +129,6 @@ class Preferences(context: Context) {
         private const val DYNAMIC = "dynamic_color"
         private const val AMOLED = "amoled_black"
         private const val COMB_MOTION = "comb_motion"
-        private const val HIVE_INVITE_ANSWERED = "hive_invite_answered_version"
         private const val TOUCHPAD_SENSITIVITY = "touchpad_sensitivity"
         private const val SUGGEST_CLIPBOARD_ACTIONS = "suggest_clipboard_actions"
         private const val VOLUME_KEYS_CONTROL_PC = "volume_keys_control_pc"
@@ -154,7 +138,7 @@ class Preferences(context: Context) {
         private const val WALKTHROUGH_STEP = "walkthrough_step"
         private const val WHATS_NEW_GUIDE_DISMISSED = "whats_new_guide_dismissed"
 
-        val VALID_THEMES = setOf("hive", "bloom", "graphite", "glass")
+        val VALID_THEMES = setOf("bloom", "graphite", "glass")
         val VALID_MODES = setOf("system", "light", "dark")
 
         fun sanitizeAppearance(

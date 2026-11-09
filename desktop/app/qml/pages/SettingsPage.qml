@@ -541,12 +541,11 @@ Item {
                             title: qsTr("Theme")
                             Segmented {
                                 options: [
-                                    { value: "hive", label: qsTr("Hive") },
                                     { value: "bloom", label: qsTr("Bloom") },
                                     { value: "glass", label: qsTr("Glass") },
                                     { value: "graphite", label: qsTr("Graphite") }
                                 ]
-                                value: Theme.hive ? "hive" : (Theme.glass ? "glass" : Preferences.theme)
+                                value: Theme.glass ? "glass" : Preferences.theme
                                 onPicked: (value) => Preferences.theme = value
                             }
                         }
@@ -582,12 +581,11 @@ Item {
                                 onPicked: (value) => Preferences.uiScale = value
                             }
                         }
-                        // Hive's colors are fixed: no seed to pick.
-                        Divider { width: parent.width; visible: !Theme.graphite && !Theme.hive }
+                        Divider { width: parent.width; visible: !Theme.graphite }
                         ListRow {
                             id: colorRow
                             width: parent.width
-                            visible: !Theme.graphite && !Theme.hive
+                            visible: !Theme.graphite
                             stackBelow: true
                             iconPath: Icons.colorSwatch
                             title: qsTr("Color")
@@ -829,33 +827,13 @@ Item {
                         }
                         Divider { width: parent.width }
 
-                        // Hive: the comb's motion instead of Mica (Hive keeps its own colors).
-                        ListRow {
-                            width: parent.width
-                            visible: Theme.hive
-                            iconPath: Icons.sparkle
-                            title: qsTr("Animated comb")
-                            description: AppController.reduceMotion
-                                ? (Qt.platform.os === "linux"
-                                    ? qsTr("Still while animations are off in system settings.")
-                                    : qsTr("Still while animations are off in Windows."))
-                                : (AppController.powerSaver
-                                    ? qsTr("Still while energy saver is on.")
-                                    : qsTr("The honeycomb breathes and pulses."))
-                            Toggle {
-                                label: qsTr("Animated comb")
-                                checked: Preferences.combMotion
-                                onToggled: (on) => Preferences.combMotion = on
-                            }
-                        }
-
                         // Side-by-side when Graphite Dark shows Pure Black + Mica backdrop
                         Item {
                             id: appearanceBottomPair
                             readonly property bool showGraphiteAmoled: Theme.graphite && Theme.dark
                             readonly property bool showMica: Qt.platform.os === "windows"
                                 && !!Window.window && Window.window.systemBackdropSupported === true
-                            visible: !Theme.hive && (showMica || showGraphiteAmoled)
+                            visible: showMica || showGraphiteAmoled
                             width: parent.width
                             readonly property bool splitCols: showGraphiteAmoled && showMica && width >= 460
                             readonly property real colWidth: splitCols ? Math.floor((width - 37) / 2) : width

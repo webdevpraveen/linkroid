@@ -11,7 +11,7 @@ import com.webdevpraveen.linkroid
 QtObject {
     id: theme
 
-    readonly property bool hive: Preferences.theme === "hive"
+    readonly property bool hive: false
     readonly property bool graphite: Preferences.theme === "graphite"
     readonly property bool glass: Preferences.theme === "glass" || Preferences.theme === "blurry"
     readonly property bool dark: Preferences.colorMode === "dark"
@@ -19,11 +19,7 @@ QtObject {
     readonly property bool amoled: dark && Preferences.amoled && (graphite || Preferences.seed === "black")
     readonly property bool reduceMotion: AppController.reduceMotion
 
-    // ---- Hive's comb ----
-    readonly property var comb: Tokens.data.themes.hive.comb
-    // Breathes and pulses: the user's setting, never with reduced motion or
-    // battery saver (it holds still then).
-    readonly property bool combMotion: hive && Preferences.combMotion && !reduceMotion && !AppController.powerSaver
+    readonly property bool combMotion: false
     readonly property color combLine: Qt.rgba(primary.r, primary.g, primary.b,
                                               dark ? comb.lineAlphaDark : comb.lineAlphaLight)
     readonly property color combGlow: dark ? Qt.rgba(1.0, 0.62, 0.18, comb.glowAlphaDark)

@@ -16,7 +16,7 @@ class ThemeAndLocalizationTest {
 
     @Test
     fun `sanitizeAppearance accepts valid themes, modes, and seeds and falls back on unknown or null values`() {
-        val themes = listOf("hive", "bloom", "graphite", "glass")
+        val themes = listOf("bloom", "graphite", "glass")
         val modes = listOf("system", "light", "dark")
         val seeds = Tokens.bloomSeeds.keys + "artwork"
 

@@ -27,7 +27,7 @@ impl<'de> Deserialize<'de> for Theme {
     fn deserialize<D: serde::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         let s = String::deserialize(deserializer).unwrap_or_default();
         Ok(match s.trim().to_ascii_lowercase().as_str() {
-            "hive" => Theme::Hive,
+            "hive" => Theme::Bloom,
             "graphite" => Theme::Graphite,
             "glass" | "blurry" => Theme::Glass,
             _ => Theme::Bloom,
@@ -715,7 +715,7 @@ impl Default for Settings {
             walkthrough_completed: false,
             walkthrough_step: 0,
             whats_new_dismissed: false,
-            hive_invite_dismissed: false,
+            hive_invite_dismissed: true,
             star_prompt_done: false,
             star_prompt_updated: false,
             star_prompt_minutes: 0,

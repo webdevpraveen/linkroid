@@ -5,8 +5,8 @@ import QtQuick.Shapes
 import com.webdevpraveen.linkroid
 
 // The installer's and the uninstaller's window (src/setup.rs). One window,
-// three moments: welcome, working, done. Its own fixed colors (honey on warm
-// paper, or on charcoal), following the system's light or dark mode.
+// three moments: welcome, working, done. In Linkroid's signature cyan and slate,
+// following the system's light or dark mode.
 NativeWindow {
     id: window
 
@@ -15,21 +15,17 @@ NativeWindow {
     readonly property bool animate: !Setup.reduceMotion
     readonly property string phase: Setup.phase
 
-    readonly property color bg: dark ? "#121214" : "#FFF8F3"
-    readonly property color ink: dark ? "#EDE6DD" : "#1F1B16"
-    readonly property color muted: dark ? "#A39A90" : "#6B5E52"
-    readonly property color honey: dark ? "#FFB95F" : "#8A5100"
-    readonly property color onHoney: dark ? "#2C1600" : "#FFFFFF"
+    readonly property color bg: dark ? "#0B132B" : "#F8FAFC"
+    readonly property color ink: dark ? "#F8FAFC" : "#0F172A"
+    readonly property color muted: dark ? "#94A3B8" : "#64748B"
+    readonly property color honey: dark ? "#38BDF8" : "#0284C7"
+    readonly property color onHoney: dark ? "#0B132B" : "#FFFFFF"
     readonly property color track: dark ? Qt.rgba(1, 1, 1, 0.08) : Qt.rgba(0.12, 0.10, 0.08, 0.08)
     readonly property color danger: dark ? "#F0A39C" : "#9E2B25"
     readonly property color panel: dark ? "#1C1B1D" : "#FFFFFF"
-    // Removing: the comb goes grey and dim.
-    readonly property color comb: removing
-        ? (dark ? Qt.rgba(1, 1, 1, 0.09) : Qt.rgba(0.30, 0.26, 0.22, 0.06))
-        : (dark ? Qt.rgba(1.0, 0.73, 0.37, 0.22) : Qt.rgba(0.54, 0.32, 0.0, 0.085))
-    readonly property color combGlow: removing
-        ? (dark ? Qt.rgba(0.55, 0.52, 0.48, 0.55) : Qt.rgba(0.72, 0.68, 0.62, 0.55))
-        : (dark ? Qt.rgba(1.0, 0.62, 0.18, 0.75) : Qt.rgba(1.0, 0.72, 0.37, 0.80))
+    readonly property color glow: removing
+        ? (dark ? Qt.rgba(0.55, 0.52, 0.48, 0.25) : Qt.rgba(0.72, 0.68, 0.62, 0.25))
+        : (dark ? Qt.rgba(0.01, 0.52, 0.78, 0.35) : Qt.rgba(0.22, 0.74, 0.97, 0.25))
 
     // Not Theme's: Theme reads the app's settings and data, which setup and
     // the uninstaller (which deletes them) must leave alone.
@@ -90,13 +86,16 @@ NativeWindow {
         Keys.onReturnPressed: if (!disclosure.open && window.phase !== "working") window.primary()
         Keys.onEnterPressed: if (!disclosure.open && window.phase !== "working") window.primary()
 
-        HiveBackdrop {
+        Rectangle {
             anchors.fill: parent
-            animate: window.animate
-            lineColor: window.comb
-            glowColor: window.combGlow
-            strength: window.removing ? 0.7 : 1
-            origin: Qt.point(width / 2, window.phase === "done" && !window.removing ? 40 : 112)
+            color: window.bg
+            Rectangle {
+                anchors.centerIn: parent
+                anchors.verticalCenterOffset: -40
+                width: 480; height: 360
+                radius: 180
+                color: window.glow
+            }
         }
 
         // There is no title bar, so the window moves from anywhere that
