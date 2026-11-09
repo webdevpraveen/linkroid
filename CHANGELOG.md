@@ -4,6 +4,16 @@ All notable changes to Linkroid. Versions follow
 [semantic versioning](https://semver.org); before 1.0, a minor version may
 change things that need a step from you, and its notes say so.
 
+## 0.1.1 (2026-11-09)
+
+Brand identity refresh, theme cleanup, and packaging polish.
+
+### What's new in 0.1.1
+
+- **New Linkroid Brand Emblem**: Replaced all legacy icon traces across Windows (installer, app window, taskbar, system tray, navigation rail, and welcome page) and Android (adaptive launcher icon, monochrome themed icon, and status bar notifications) with the official Linkroid interlocking device loops: Android Phone in Emerald Green `#00E676` and PC Desktop in Electric Blue `#0091FF`, connected by an Electric Cyan `#38BDF8` nexus.
+- **Theme Simplification**: Permanently removed the "Try Hive" invite card, the Hive theme, and the animated honeycomb backdrop shader from both Android and Windows applications. Supported themes are now Bloom (Material You), Glass (translucent acrylic), and Graphite (monochrome / AMOLED).
+- **Packaging & Polish**: Added clean scalable SVG integration (`icon-flat.svg`) for Linux packages (AppImage, deb, rpm, tarball), modernized setup installer styling with Linkroid's signature cyan and slate palette, and verified zero UTF-8 BOM issues across all project source files.
+
 ## 0.1.0 "Genesis" (2026-11-08)
 
 The first public release of Linkroid: the Windows app, the Android app and
