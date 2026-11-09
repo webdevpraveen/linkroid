@@ -1,0 +1,58 @@
+{
+  "schema": 1,
+  "channel": "stable",
+  "version": "0.1.0",
+  "name": "Genesis",
+  "published": "2026-11-09T07:09:49Z",
+  "notes": "https://github.com/webdevpraveen/linkroid/releases/tag/v0.1.0",
+  "files": [
+    {
+      "name": "Linkroid-0.1.0-android.apk",
+      "url": "https://github.com/webdevpraveen/linkroid/releases/download/v0.1.0/Linkroid-0.1.0-android.apk",
+      "sha256": "c834a8af14f26455149f9c966bb4c1508ecb7bdb4c40ef7f459a384fb50935ac",
+      "size": 53007914
+    },
+    {
+      "name": "Linkroid-0.1.0-arm64-setup.exe",
+      "url": "https://github.com/webdevpraveen/linkroid/releases/download/v0.1.0/Linkroid-0.1.0-arm64-setup.exe",
+      "sha256": "226137260b3c53ab59da63471e15f9753d523393cf6125dd4b00f198058fa6ef",
+      "size": 38696291
+    },
+    {
+      "name": "Linkroid-0.1.0-linux-x86_64.tar.gz",
+      "url": "https://github.com/webdevpraveen/linkroid/releases/download/v0.1.0/Linkroid-0.1.0-linux-x86_64.tar.gz",
+      "sha256": "722968c651c751ad5a7292b85bacd582270320a0da2fb7e6be91dea4c7263e3b",
+      "size": 71096737
+    },
+    {
+      "name": "Linkroid-0.1.0-x64-setup.exe",
+      "url": "https://github.com/webdevpraveen/linkroid/releases/download/v0.1.0/Linkroid-0.1.0-x64-setup.exe",
+      "sha256": "27e05e8b24ce55e240941ff67370b0685acf3e151f2f612c6fbfc54a77e00e5f",
+      "size": 42136703
+    },
+    {
+      "name": "Linkroid-0.1.0-x86_64.AppImage",
+      "url": "https://github.com/webdevpraveen/linkroid/releases/download/v0.1.0/Linkroid-0.1.0-x86_64.AppImage",
+      "sha256": "e94feeb6492b322277623b62f7a97fe535fc81f19aa02614b4c6f59dbf02476b",
+      "size": 64207352
+    },
+    {
+      "name": "install.sh",
+      "url": "https://github.com/webdevpraveen/linkroid/releases/download/v0.1.0/install.sh",
+      "sha256": "8abeccfaf3d2b4d4c9f07b360509a134ae7d25d6f039c5d3384db837140ac1cd",
+      "size": 23508
+    },
+    {
+      "name": "linkroid-0.1.0-1.x86_64.rpm",
+      "url": "https://github.com/webdevpraveen/linkroid/releases/download/v0.1.0/linkroid-0.1.0-1.x86_64.rpm",
+      "sha256": "f6ba4d28a27b6d3941c39fa89caf91568b8440dcfdbf0c5cda4258e292909b16",
+      "size": 71045670
+    },
+    {
+      "name": "linkroid_0.1.0_amd64.deb",
+      "url": "https://github.com/webdevpraveen/linkroid/releases/download/v0.1.0/linkroid_0.1.0_amd64.deb",
+      "sha256": "668ccc2bb569712ac7daad2bce38ff2dcc750f659f4134c63a05195e41d1ea6b",
+      "size": 51793286
+    }
+  ]
+}
