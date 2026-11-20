@@ -130,12 +130,12 @@ impl AuthManager {
     /// Checks if a phone is currently locked out by rate limiting.
     pub fn check_rate_limit(&self, phone_id: &DeviceId, now: u64) -> Result<(), AuthError> {
         let rate_limits = self.rate_limits.lock().unwrap_or_else(|e| e.into_inner());
-        if let Some(tracker) = rate_limits.get(phone_id) {
-            if let Some(lockout_until) = tracker.lockout_until {
-                if now < lockout_until {
-                    return Err(AuthError::RateLimited(*phone_id, lockout_until - now));
-                }
-            }
+        if let Some(lockout_until) = rate_limits
+            .get(phone_id)
+            .and_then(|t| t.lockout_until)
+            .filter(|&until| now < until)
+        {
+            return Err(AuthError::RateLimited(*phone_id, lockout_until - now));
         }
         Ok(())
     }
@@ -495,12 +495,12 @@ mod tests {
         let (_, wrong_keypair) = generate_test_p256_key();
         auth.enroll_phone(phone_id, pubkey);
 
+        let rng = SystemRandom::new();
         // Fail 4 times
         for _ in 0..4 {
             let challenge = auth.create_unlock_challenge(phone_id).unwrap();
             let timestamp = now_secs();
             let digest = canonical_unlock_digest(&challenge.nonce, &challenge.session_id, &pc_id, timestamp);
-            let rng = SystemRandom::new();
             let sig = wrong_keypair.sign(&rng, &digest).unwrap();
             let resp = UnlockResponse {
                 session_id: challenge.session_id,
@@ -514,7 +514,6 @@ mod tests {
         let challenge = auth.create_unlock_challenge(phone_id).unwrap();
         let timestamp = now_secs();
         let digest = canonical_unlock_digest(&challenge.nonce, &challenge.session_id, &pc_id, timestamp);
-        let rng = SystemRandom::new();
         let sig = wrong_keypair.sign(&rng, &digest).unwrap();
         let resp = UnlockResponse {
             session_id: challenge.session_id,

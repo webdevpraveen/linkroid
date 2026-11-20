@@ -452,21 +452,18 @@ pub(crate) async fn handle(shared: &Arc<Shared>, session: &Arc<Session>, env: &E
                 Err(err) => Envelope::error(ErrorCode::Denied, err.to_string()),
                 Ok(()) => {
                     let platform = shared.platform.clone();
-                    let reply = Envelope::new(
+                    tokio::task::spawn_blocking(move || {
+                        if let Err(reason) = platform.power(PowerAction::Lock) {
+                            tracing::warn!(reason, "lock action failed");
+                        }
+                    });
+                    Envelope::new(
                         types::AUTH_LOCK_RESPONSE,
                         &linkroid_protocol::auth::SignedLockResponse {
                             success: true,
                             message: None,
                         },
                     )?
-                    .reply_to(env.id);
-                    session.send(reply).await?;
-                    tokio::task::spawn_blocking(move || {
-                        if let Err(reason) = platform.power(PowerAction::Lock) {
-                            tracing::warn!(reason, "lock action failed");
-                        }
-                    });
-                    return Ok(true);
                 }
             }
         }

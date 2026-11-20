@@ -106,7 +106,7 @@ mod tests {
     #[test]
     fn test_canonical_unlock_digest_is_deterministic() {
         let pc_id = DeviceId([7u8; 32]);
-        let nonce = vec![1u8; 32];
+        let nonce = [1u8; 32];
         let session = "session-12345";
         let time = 1795160000u64;
 
@@ -131,7 +131,7 @@ mod tests {
     #[test]
     fn test_canonical_lock_digest_is_deterministic() {
         let pc_id = DeviceId([9u8; 32]);
-        let nonce = vec![4u8; 32];
+        let nonce = [4u8; 32];
         let time = 1795160000u64;
 
         let d1 = canonical_lock_digest(&nonce, &pc_id, time);
