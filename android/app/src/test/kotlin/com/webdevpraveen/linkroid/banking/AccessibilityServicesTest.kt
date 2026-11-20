@@ -8,7 +8,7 @@ import org.junit.Test
 
 class AccessibilityServicesTest {
     private val long = "com.webdevpraveen.linkroid/com.webdevpraveen.linkroid.mirror.InputService"
-    private val short = "com.webdevpraveen.linkroid/.android.mirror.InputService"
+    private val short = "com.webdevpraveen.linkroid/.mirror.InputService"
     private val launcher = "com.microsoft.launcher/.LauncherAccessibilityService"
 
     @Test
@@ -24,7 +24,7 @@ class AccessibilityServicesTest {
         assertFalse(AccessibilityServices.contains("", long))
         assertFalse(AccessibilityServices.contains(launcher, long))
         assertFalse(AccessibilityServices.contains("com.webdevpraveen.linkroid/.other.InputService", long))
-        assertFalse(AccessibilityServices.contains("com.webdevpraveen.linkroid.dev/.android.mirror.InputService", long))
+        assertFalse(AccessibilityServices.contains("com.webdevpraveen.linkroid.dev/.mirror.InputService", long))
     }
 
     @Test
