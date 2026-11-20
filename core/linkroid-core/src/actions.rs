@@ -446,6 +446,30 @@ pub(crate) async fn handle(shared: &Arc<Shared>, session: &Arc<Session>, env: &E
                 }
             }
         }
+        types::AUTH_LOCK_REQUEST => {
+            let request: linkroid_protocol::auth::SignedLockRequest = env.body()?;
+            match shared.auth.verify_lock_request(&peer, &request) {
+                Err(err) => Envelope::error(ErrorCode::Denied, err.to_string()),
+                Ok(()) => {
+                    let platform = shared.platform.clone();
+                    let reply = Envelope::new(
+                        types::AUTH_LOCK_RESPONSE,
+                        &linkroid_protocol::auth::SignedLockResponse {
+                            success: true,
+                            message: None,
+                        },
+                    )?
+                    .reply_to(env.id);
+                    session.send(reply).await?;
+                    tokio::task::spawn_blocking(move || {
+                        if let Err(reason) = platform.power(PowerAction::Lock) {
+                            tracing::warn!(reason, "lock action failed");
+                        }
+                    });
+                    return Ok(true);
+                }
+            }
+        }
         types::LINK_OPEN => {
             let LinkOpen { url, title: sender_title } = env.body()?;
             if !valid_link(&url) {

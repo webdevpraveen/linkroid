@@ -212,6 +212,8 @@ pub(crate) struct Shared {
     /// Smart suggestion for the most recently received text clip, if any.
     pub(crate) last_clip_suggestion: Mutex<Option<(DeviceId, crate::ClipSuggestion)>>,
     pub(crate) private_clip_lifetime: std::time::Duration,
+    /// Biometric authentication & challenge-response manager.
+    pub auth: Arc<crate::auth::AuthManager>,
     /// LocalSend v2.1 discovery, server, and outgoing transfers.
     pub(crate) localsend: crate::localsend::LocalSendState,
     /// Bound loopback TCP port for the phone-side USB tunnel listener (0 if disabled).
@@ -1708,6 +1710,7 @@ impl Node {
             clipboard_history,
             last_clip_suggestion: Mutex::new(None),
             private_clip_lifetime: config.private_clip_lifetime,
+            auth: Arc::new(crate::auth::AuthManager::new(id)),
             localsend,
             usb_listener_port: std::sync::atomic::AtomicU16::new(0),
             usb_bridge_ports: Arc::new(Mutex::new(std::collections::HashSet::new())),
@@ -1758,6 +1761,11 @@ impl Node {
         run_queue_coordinator(Arc::downgrade(&shared), shared.cancel.child_token());
         tracing::info!(device = %id.short(), lan = config.lan_discovery, away = config.away_mode, "node started");
         Ok(Node { shared, router: Arc::new(router) })
+    }
+
+    /// Returns the biometric authentication manager for this node.
+    pub fn auth(&self) -> Arc<crate::auth::AuthManager> {
+        self.shared.auth.clone()
     }
 
     /// Whether remote / mobile data connections outside the local Wi-Fi/LAN are allowed.

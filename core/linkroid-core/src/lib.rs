@@ -7,6 +7,7 @@
 //! `docs/architecture/core-api.md` for the design.
 
 mod actions;
+pub mod auth;
 mod calls;
 pub mod clip_kind;
 mod clipboard;
@@ -44,6 +45,7 @@ pub mod usb;
 pub mod webcam;
 
 pub use actions::{PC_WAKE, PowerAction};
+pub use auth::{AuthError, AuthManager};
 pub use calls::CallCommand;
 pub use clip_kind::{
     ClipKind, ClipSuggestion, classify_clip, maps_web_url, percent_encode, tracking_search_url,

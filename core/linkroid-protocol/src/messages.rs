@@ -28,6 +28,11 @@ pub mod types {
     pub const PAIR_DONE: &str = "pair.done";
     pub const PAIR_REVOKE: &str = "pair.revoke";
 
+    pub const AUTH_UNLOCK_CHALLENGE: &str = "auth.unlock.challenge";
+    pub const AUTH_UNLOCK_RESPONSE: &str = "auth.unlock.response";
+    pub const AUTH_LOCK_REQUEST: &str = "auth.lock.request";
+    pub const AUTH_LOCK_RESPONSE: &str = "auth.lock.response";
+
     pub const NOTIFY_SNAPSHOT: &str = "notify.snapshot";
     pub const NOTIFY_POSTED: &str = "notify.posted";
     pub const NOTIFY_REMOVED: &str = "notify.removed";

@@ -9,6 +9,7 @@ mod envelope;
 mod error;
 mod frame;
 mod id;
+pub mod auth;
 pub mod messages;
 pub mod pairing;
 mod video;
