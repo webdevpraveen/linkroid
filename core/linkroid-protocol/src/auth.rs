@@ -121,7 +121,7 @@ mod tests {
         let d4 = canonical_unlock_digest(&nonce, session, &DeviceId([8u8; 32]), time);
         assert_ne!(d1, d4);
 
-        let d5 = canonical_unlock_digest(&vec![2u8; 32], session, &pc_id, time);
+        let d5 = canonical_unlock_digest(&[2u8; 32], session, &pc_id, time);
         assert_ne!(d1, d5);
 
         let d6 = canonical_unlock_digest(&nonce, session, &pc_id, time + 1);

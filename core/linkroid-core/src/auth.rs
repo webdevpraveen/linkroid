@@ -20,7 +20,6 @@ use linkroid_protocol::{
         canonical_lock_digest, canonical_unlock_digest,
     },
 };
-use rand::RngCore;
 use ring::signature::{self, UnparsedPublicKey};
 use thiserror::Error;
 
@@ -150,11 +149,10 @@ impl AuthManager {
         let now = now_secs();
         self.check_rate_limit(&phone_id, now)?;
 
-        let mut nonce = vec![0u8; 32];
-        rand::rng().fill_bytes(&mut nonce);
+        let nonce_bytes: [u8; 32] = rand::random();
+        let nonce = nonce_bytes.to_vec();
 
-        let mut session_bytes = [0u8; 16];
-        rand::rng().fill_bytes(&mut session_bytes);
+        let session_bytes: [u8; 16] = rand::random();
         let session_id = data_encoding::HEXLOWER.encode(&session_bytes);
 
         let expiry = now + CHALLENGE_TTL_SECS;
@@ -195,10 +193,7 @@ impl AuthManager {
 
         let enrolled_pubkey = {
             let phones = self.enrolled_phones.lock().unwrap_or_else(|e| e.into_inner());
-            phones
-                .get(phone_id)
-                .cloned()
-                .ok_or(AuthError::NotEnrolled(*phone_id))?
+            phones.get(phone_id).cloned().ok_or(AuthError::NotEnrolled(*phone_id))?
         };
 
         // CRITICAL: remove challenge immediately to enforce single-use nonce
@@ -210,10 +205,7 @@ impl AuthManager {
 
         if challenge.phone_id != *phone_id {
             self.record_failure(phone_id, now);
-            return Err(AuthError::DeviceMismatch {
-                expected: challenge.phone_id,
-                actual: *phone_id,
-            });
+            return Err(AuthError::DeviceMismatch { expected: challenge.phone_id, actual: *phone_id });
         }
 
         if now > challenge.expiry {
@@ -255,10 +247,7 @@ impl AuthManager {
         let now = now_secs();
 
         if request.pc_id != self.local_pc_id {
-            return Err(AuthError::PcIdMismatch {
-                expected: self.local_pc_id,
-                actual: request.pc_id,
-            });
+            return Err(AuthError::PcIdMismatch { expected: self.local_pc_id, actual: request.pc_id });
         }
 
         if request.timestamp > now + CLOCK_SKEW_TOLERANCE_SECS
@@ -270,10 +259,7 @@ impl AuthManager {
         if let Some(signature_bytes) = &request.signature {
             let enrolled_pubkey = {
                 let phones = self.enrolled_phones.lock().unwrap_or_else(|e| e.into_inner());
-                phones
-                    .get(phone_id)
-                    .cloned()
-                    .ok_or(AuthError::NotEnrolled(*phone_id))?
+                phones.get(phone_id).cloned().ok_or(AuthError::NotEnrolled(*phone_id))?
             };
 
             let digest = canonical_lock_digest(&request.nonce, &self.local_pc_id, request.timestamp);
@@ -320,7 +306,7 @@ fn now_secs() -> u64 {
 mod tests {
     use super::*;
     use ring::rand::SystemRandom;
-    use ring::signature::EcdsaKeyPair;
+    use ring::signature::{EcdsaKeyPair, KeyPair};
 
     fn generate_test_p256_key() -> (Vec<u8>, EcdsaKeyPair) {
         let rng = SystemRandom::new();
@@ -399,10 +385,7 @@ mod tests {
         assert!(auth.verify_unlock_response(&phone_id, &response).is_ok());
 
         // Replay of the exact same response must fail with InvalidSession
-        assert_eq!(
-            auth.verify_unlock_response(&phone_id, &response),
-            Err(AuthError::InvalidSession)
-        );
+        assert_eq!(auth.verify_unlock_response(&phone_id, &response), Err(AuthError::InvalidSession));
     }
 
     #[test]
@@ -437,10 +420,7 @@ mod tests {
             signature: sig.as_ref().to_vec(),
         };
 
-        assert_eq!(
-            auth.verify_unlock_response(&phone_id, &response),
-            Err(AuthError::Expired)
-        );
+        assert_eq!(auth.verify_unlock_response(&phone_id, &response), Err(AuthError::Expired));
     }
 
     #[test]
@@ -471,10 +451,7 @@ mod tests {
             signature: wrong_sig.as_ref().to_vec(),
         };
 
-        assert_eq!(
-            auth.verify_unlock_response(&phone_id, &response),
-            Err(AuthError::InvalidSignature)
-        );
+        assert_eq!(auth.verify_unlock_response(&phone_id, &response), Err(AuthError::InvalidSignature));
     }
 
     #[test]
@@ -505,10 +482,7 @@ mod tests {
             signature: sig.as_ref().to_vec(),
         };
 
-        assert_eq!(
-            auth.verify_unlock_response(&phone_id, &response),
-            Err(AuthError::InvalidSignature)
-        );
+        assert_eq!(auth.verify_unlock_response(&phone_id, &response), Err(AuthError::InvalidSignature));
     }
 
     #[test]
