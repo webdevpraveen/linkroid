@@ -99,9 +99,148 @@ pub fn canonical_lock_digest(
     hasher.finalize().into()
 }
 
+/// Inter-Process Communication (IPC) primitives between Windows LogonUI Credential Provider and Linkroid Service.
+pub mod ipc {
+    use super::*;
+
+    /// Default Windows Named Pipe name for Linkroid Credential Provider IPC.
+    pub const AUTH_PIPE_NAME: &str = r"\\.\pipe\LinkroidAuthPipe";
+
+    /// Maximum permitted IPC message size (64 KB) to avoid memory exhaustion.
+    pub const MAX_IPC_MESSAGE_SIZE: usize = 65536;
+
+    /// Current IPC protocol version.
+    pub const IPC_PROTOCOL_VERSION: u32 = 1;
+
+    /// Request messages sent from LogonUI / Credential Provider DLL / Desktop helper to the Windows Service.
+    #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+    pub enum IpcRequest {
+        /// Checks the status of phone pairing and enrollment.
+        QueryStatus,
+        /// Initiates an unlock challenge-response flow with the enrolled phone.
+        StartUnlock,
+        /// Polls for the result of an ongoing unlock attempt.
+        PollUnlock { session_id: String },
+        /// Requests the Windows machine to lock immediately.
+        LockWorkStation,
+        /// Stores or updates DPAPI-encrypted credentials for auto-logon.
+        EnrollCredential {
+            username: String,
+            domain: Option<String>,
+            #[serde(with = "serde_bytes")]
+            encrypted_secret: Vec<u8>,
+        },
+        /// Clears stored credentials and un-enrolls biometric unlock.
+        RevokeCredential,
+    }
+
+    /// Response messages returned by the Windows Service.
+    #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+    pub enum IpcResponse {
+        Status {
+            enrolled: bool,
+            phone_connected: bool,
+            phone_name: Option<String>,
+            locked_out: bool,
+        },
+        UnlockInitiated {
+            session_id: String,
+            expiry: u64,
+        },
+        UnlockStatus {
+            session_id: String,
+            state: UnlockState,
+        },
+        LockAcknowledged {
+            success: bool,
+        },
+        CredentialEnrolled {
+            success: bool,
+        },
+        CredentialRevoked {
+            success: bool,
+        },
+        Error {
+            code: u32,
+            message: String,
+        },
+    }
+
+    /// Status of a pending or completed unlock attempt.
+    #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+    pub enum UnlockState {
+        Pending,
+        Success,
+        Denied,
+        Expired,
+        RateLimited,
+    }
+
+    /// Encodes an IPC message into a 4-byte little-endian length-prefixed CBOR payload.
+    pub fn encode_ipc_message<T: Serialize>(msg: &T) -> Result<Vec<u8>, String> {
+        let mut payload = Vec::new();
+        ciborium::into_writer(msg, &mut payload).map_err(|e| e.to_string())?;
+        if payload.len() > MAX_IPC_MESSAGE_SIZE {
+            return Err("IPC message exceeds maximum permitted size".into());
+        }
+        let mut framed = Vec::with_capacity(4 + payload.len());
+        framed.extend_from_slice(&(payload.len() as u32).to_le_bytes());
+        framed.extend_from_slice(&payload);
+        Ok(framed)
+    }
+
+    /// Decodes an IPC message from a length-prefixed buffer slice.
+    pub fn decode_ipc_message<T: for<'de> Deserialize<'de>>(bytes: &[u8]) -> Result<T, String> {
+        if bytes.len() < 4 {
+            return Err("buffer too short for length prefix".into());
+        }
+        let len = u32::from_le_bytes([bytes[0], bytes[1], bytes[2], bytes[3]]) as usize;
+        if len > MAX_IPC_MESSAGE_SIZE {
+            return Err("IPC frame declared length exceeds maximum permitted size".into());
+        }
+        if bytes.len() < 4 + len {
+            return Err("incomplete IPC frame payload".into());
+        }
+        ciborium::from_reader(&bytes[4..4 + len]).map_err(|e| e.to_string())
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn test_ipc_roundtrip_query_status() {
+        let req = ipc::IpcRequest::QueryStatus;
+        let encoded = ipc::encode_ipc_message(&req).expect("encode query");
+        let decoded: ipc::IpcRequest = ipc::decode_ipc_message(&encoded).expect("decode query");
+        assert_eq!(req, decoded);
+
+        let resp = ipc::IpcResponse::Status {
+            enrolled: true,
+            phone_connected: true,
+            phone_name: Some("Pixel 9 Pro".into()),
+            locked_out: false,
+        };
+        let encoded_resp = ipc::encode_ipc_message(&resp).expect("encode status");
+        let decoded_resp: ipc::IpcResponse =
+            ipc::decode_ipc_message(&encoded_resp).expect("decode status");
+        assert_eq!(resp, decoded_resp);
+    }
+
+    #[test]
+    fn test_ipc_roundtrip_lock_command() {
+        let req = ipc::IpcRequest::LockWorkStation;
+        let encoded = ipc::encode_ipc_message(&req).expect("encode lock");
+        let decoded: ipc::IpcRequest = ipc::decode_ipc_message(&encoded).expect("decode lock");
+        assert_eq!(req, decoded);
+
+        let resp = ipc::IpcResponse::LockAcknowledged { success: true };
+        let encoded_resp = ipc::encode_ipc_message(&resp).expect("encode lock ack");
+        let decoded_resp: ipc::IpcResponse =
+            ipc::decode_ipc_message(&encoded_resp).expect("decode lock ack");
+        assert_eq!(resp, decoded_resp);
+    }
 
     #[test]
     fn test_canonical_unlock_digest_is_deterministic() {

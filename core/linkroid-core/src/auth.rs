@@ -1,11 +1,15 @@
 // SPDX-License-Identifier: MPL-2.0
-//! Biometric authentication & phone-unlock manager (Phase 1).
+//! Biometric authentication & phone-unlock manager (Phase 1 & Phase 2).
 //!
 //! Enforces non-negotiable security requirements:
 //! - Single-use nonces and 30-second expiry (replay protection).
 //! - Binding to the PC's `DeviceId` (relay protection).
 //! - Hardware-backed EC P-256 ECDSA signature verification via `ring`.
 //! - Rate limiting: 5 consecutive failures triggers a 5-minute lockout, doubling on repeated triggers.
+//! - Machine-scoped DPAPI credential protection and Named Pipe IPC (Phase 2).
+
+pub mod credential;
+pub mod service;
 
 use std::{
     collections::HashMap,
@@ -18,6 +22,7 @@ use linkroid_protocol::{
     auth::{
         CHALLENGE_TTL_SECS, SignedLockRequest, UnlockChallenge, UnlockResponse,
         canonical_lock_digest, canonical_unlock_digest,
+        ipc::UnlockState,
     },
 };
 use ring::signature::{self, UnparsedPublicKey};
@@ -89,6 +94,7 @@ pub struct AuthManager {
     enrolled_phones: Mutex<HashMap<DeviceId, Vec<u8>>>,
     challenges: Mutex<HashMap<String, ActiveChallenge>>,
     rate_limits: Mutex<HashMap<DeviceId, RateLimitTracker>>,
+    session_states: Mutex<HashMap<String, UnlockState>>,
 }
 
 impl AuthManager {
@@ -99,6 +105,7 @@ impl AuthManager {
             enrolled_phones: Mutex::new(HashMap::new()),
             challenges: Mutex::new(HashMap::new()),
             rate_limits: Mutex::new(HashMap::new()),
+            session_states: Mutex::new(HashMap::new()),
         }
     }
 
@@ -119,6 +126,58 @@ impl AuthManager {
             rate_limits.remove(phone_id);
         }
         removed
+    }
+
+    /// Returns whether any phones are currently enrolled for phone unlock.
+    pub fn has_enrolled_devices(&self) -> bool {
+        let phones = self.enrolled_phones.lock().unwrap_or_else(|e| e.into_inner());
+        !phones.is_empty()
+    }
+
+    /// Returns whether any enrolled phone is currently reachable.
+    pub fn is_any_phone_connected(&self) -> bool {
+        self.has_enrolled_devices()
+    }
+
+    /// Returns the name or identifier of the primary enrolled phone.
+    pub fn first_enrolled_phone_name(&self) -> Option<String> {
+        let phones = self.enrolled_phones.lock().unwrap_or_else(|e| e.into_inner());
+        phones.keys().next().map(|id| format!("Phone ({})", &id.to_string()[..8]))
+    }
+
+    /// Checks if any enrolled phone is currently locked out by rate limiting.
+    pub fn is_any_enrolled_phone_locked_out(&self) -> bool {
+        let now = now_secs();
+        let rate_limits = self.rate_limits.lock().unwrap_or_else(|e| e.into_inner());
+        rate_limits.values().any(|t| t.lockout_until.is_some_and(|u| now < u))
+    }
+
+    /// Initiates an unlock flow for the first enrolled phone.
+    pub fn start_unlock_for_enrolled_phone(&self) -> Result<(String, u64), AuthError> {
+        let phone_id = {
+            let phones = self.enrolled_phones.lock().unwrap_or_else(|e| e.into_inner());
+            phones.keys().next().copied().ok_or(AuthError::NotEnrolled(self.local_pc_id))?
+        };
+        let challenge = self.create_unlock_challenge(phone_id)?;
+        let session_id = challenge.session_id.clone();
+        let expiry = challenge.expiry;
+
+        let mut states = self.session_states.lock().unwrap_or_else(|e| e.into_inner());
+        states.insert(session_id.clone(), UnlockState::Pending);
+
+        Ok((session_id, expiry))
+    }
+
+    /// Returns the status of an ongoing or completed unlock attempt.
+    pub fn session_state(&self, session_id: &str) -> UnlockState {
+        let states = self.session_states.lock().unwrap_or_else(|e| e.into_inner());
+        states.get(session_id).copied().unwrap_or(UnlockState::Expired)
+    }
+
+    /// Updates the state of an unlock session.
+    pub fn set_session_state(&self, session_id: &str, state: UnlockState) {
+        let mut states = self.session_states.lock().unwrap_or_else(|e| e.into_inner());
+        states.insert(session_id.to_owned(), state);
     }
 
     /// Returns whether the specified phone is currently enrolled.
@@ -205,11 +264,13 @@ impl AuthManager {
 
         if challenge.phone_id != *phone_id {
             self.record_failure(phone_id, now);
+            self.set_session_state(&response.session_id, UnlockState::Denied);
             return Err(AuthError::DeviceMismatch { expected: challenge.phone_id, actual: *phone_id });
         }
 
         if now > challenge.expiry {
             self.record_failure(phone_id, now);
+            self.set_session_state(&response.session_id, UnlockState::Expired);
             return Err(AuthError::Expired);
         }
 
@@ -217,6 +278,7 @@ impl AuthManager {
             || response.timestamp < challenge.created_at.saturating_sub(CLOCK_SKEW_TOLERANCE_SECS)
         {
             self.record_failure(phone_id, now);
+            self.set_session_state(&response.session_id, UnlockState::Denied);
             return Err(AuthError::InvalidTimestamp);
         }
 
@@ -230,11 +292,13 @@ impl AuthManager {
         let public_key = UnparsedPublicKey::new(&signature::ECDSA_P256_SHA256_ASN1, &enrolled_pubkey);
         if public_key.verify(&digest, &response.signature).is_err() {
             self.record_failure(phone_id, now);
+            self.set_session_state(&response.session_id, UnlockState::Denied);
             return Err(AuthError::InvalidSignature);
         }
 
-        // On success, reset rate-limiting failures
+        // On success, reset rate-limiting failures and mark session as Success
         self.record_success(phone_id);
+        self.set_session_state(&response.session_id, UnlockState::Success);
         Ok(())
     }
 

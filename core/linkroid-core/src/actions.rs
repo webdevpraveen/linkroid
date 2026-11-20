@@ -467,6 +467,13 @@ pub(crate) async fn handle(shared: &Arc<Shared>, session: &Arc<Session>, env: &E
                 }
             }
         }
+        types::AUTH_UNLOCK_RESPONSE => {
+            let response: linkroid_protocol::auth::UnlockResponse = env.body()?;
+            match shared.auth.verify_unlock_response(&peer, &response) {
+                Ok(()) => Envelope::empty(types::OK),
+                Err(err) => Envelope::error(ErrorCode::Denied, err.to_string()),
+            }
+        }
         types::LINK_OPEN => {
             let LinkOpen { url, title: sender_title } = env.body()?;
             if !valid_link(&url) {
