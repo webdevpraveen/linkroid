@@ -133,7 +133,7 @@ pub fn is_installed_location(exe: &Path) -> bool {
     }
     exe.starts_with("/usr")
         || exe.starts_with("/opt")
-        || s.contains("/.local/share/linkroid-app/")
+        || s.contains("/.local/share/")
         || s.contains("/.local/bin/")
         || dirs::data_local_dir()
             .is_some_and(|d| exe.starts_with(&d) || exe.starts_with(d.join("linkroid-app")))

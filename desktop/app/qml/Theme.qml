@@ -20,10 +20,9 @@ QtObject {
     readonly property bool reduceMotion: AppController.reduceMotion
 
     readonly property bool combMotion: false
-    readonly property color combLine: Qt.rgba(primary.r, primary.g, primary.b,
-                                              dark ? comb.lineAlphaDark : comb.lineAlphaLight)
-    readonly property color combGlow: dark ? Qt.rgba(1.0, 0.62, 0.18, comb.glowAlphaDark)
-                                           : Qt.rgba(1.0, 0.72, 0.37, comb.glowAlphaLight)
+    readonly property color combLine: Qt.rgba(primary.r, primary.g, primary.b, 0.1)
+    readonly property color combGlow: dark ? Qt.rgba(1.0, 0.62, 0.18, 0.1)
+                                           : Qt.rgba(1.0, 0.72, 0.37, 0.1)
     // One clock for every comb in the app (seconds), so two combs never draw
     // twice as often. The main window runs it while it's in front.
     property real combTime: 0
@@ -33,17 +32,9 @@ QtObject {
     property double _combSince: 0
     property real _combBase: 0
     readonly property Timer _combClock: Timer {
-        interval: theme.comb.frameMs
+        interval: 16
         repeat: true
-        running: theme.combClockRunning
-                 && (theme.combMotion || (theme.combPreviewShown && !theme.reduceMotion && !AppController.powerSaver))
-        onRunningChanged: {
-            if (running)
-                theme._combSince = Date.now()
-            else
-                theme._combBase = theme.combTime
-        }
-        onTriggered: theme.combTime = theme._combBase + (Date.now() - theme._combSince) / 1000
+        running: false
     }
 
     readonly property var bloomSeeds: Tokens.data.themes.bloom.seeds

@@ -602,7 +602,7 @@ pub struct Settings {
     #[serde(default, alias = "whats_new_dismissed")]
     pub whats_new_dismissed: bool,
     /// Whether the card on Home inviting to try Hive has been answered.
-    #[serde(default, alias = "hive_invite_dismissed")]
+    #[serde(default = "default_true", alias = "hive_invite_dismissed")]
     pub hive_invite_dismissed: bool,
     /// Whether the one-time ask for a star on GitHub has been answered.
     #[serde(default, alias = "star_prompt_done")]
