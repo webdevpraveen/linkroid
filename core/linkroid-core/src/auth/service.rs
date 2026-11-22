@@ -265,7 +265,7 @@ pub fn lock_workstation() -> Result<(), String> {
         let active_session = unsafe { WTSGetActiveConsoleSessionId() };
         if active_session != 0xFFFFFFFF {
             let ok = unsafe {
-                WTSDisconnectSession(WTS_CURRENT_SERVER_HANDLE, active_session, false)
+                WTSDisconnectSession(Some(WTS_CURRENT_SERVER_HANDLE), active_session, false)
             };
             if ok.is_ok() {
                 return Ok(());
