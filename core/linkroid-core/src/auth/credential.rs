@@ -95,8 +95,7 @@ impl CredentialStore {
             ciphertext,
         };
 
-        let mut buf = Vec::new();
-        ciborium::into_writer(&record, &mut buf).map_err(|e| e.to_string())?;
+        let buf = serde_json::to_vec(&record).map_err(|e| e.to_string())?;
 
         if let Some(parent) = self.file_path.parent() {
             fs::create_dir_all(parent).map_err(|e| e.to_string())?;
@@ -129,7 +128,7 @@ impl CredentialStore {
         file.read_to_end(&mut buf).map_err(|e| e.to_string())?;
 
         let record: EncryptedRecord =
-            ciborium::from_reader(&buf[..]).map_err(|e| e.to_string())?;
+            serde_json::from_slice(&buf).map_err(|e| e.to_string())?;
         let plaintext = decrypt_dpapi(&record.ciphertext)?;
         Ok(Some((record.username, record.domain, plaintext)))
     }
