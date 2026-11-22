@@ -244,7 +244,7 @@ fn encrypt_dpapi(data: &[u8]) -> Result<Vec<u8>, String> {
     // Cross-platform mock using simple masking for CI runners (Linux/macOS)
     let mut masked = data.to_vec();
     for (i, b) in masked.iter_mut().enumerate() {
-        *b ^= (0xAA + (i as u8)) & 0xFF;
+        *b ^= (i as u8).wrapping_add(0xAA);
     }
     Ok(masked)
 }
@@ -253,7 +253,7 @@ fn encrypt_dpapi(data: &[u8]) -> Result<Vec<u8>, String> {
 fn decrypt_dpapi(data: &[u8]) -> Result<ZeroizedSecret, String> {
     let mut unmasked = data.to_vec();
     for (i, b) in unmasked.iter_mut().enumerate() {
-        *b ^= (0xAA + (i as u8)) & 0xFF;
+        *b ^= (i as u8).wrapping_add(0xAA);
     }
     Ok(ZeroizedSecret::new(unmasked))
 }
