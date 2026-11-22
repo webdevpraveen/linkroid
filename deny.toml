@@ -9,6 +9,11 @@ all-features = true
 # only when they are direct dependencies.
 unmaintained = "workspace"
 yanked = "deny"
+ignore = [
+    # GHSA-hrj5-67jp-wqp9 / RUSTSEC-2026-0592: Url::origin on nested blob: URLs.
+    # Linkroid only parses http/https/custom-scheme URLs, never nested blob: URLs.
+    "RUSTSEC-2026-0592",
+]
 
 [licenses]
 # Permissive and weak-copyleft licenses that are compatible with both the

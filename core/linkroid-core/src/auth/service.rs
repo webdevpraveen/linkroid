@@ -116,7 +116,7 @@ impl AuthPipeServer {
     pub fn run(&self) -> Result<(), String> {
         use windows::{
             Win32::{
-                Foundation::{CloseHandle, HANDLE, LocalFree},
+                Foundation::{CloseHandle, LocalFree},
                 Security::{
                     Authorization::ConvertStringSecurityDescriptorToSecurityDescriptorW,
                     PSECURITY_DESCRIPTOR, SECURITY_ATTRIBUTES,
