@@ -4335,6 +4335,7 @@ async fn run(cli: &Cli, node: &Node) -> Result<()> {
             watch(node, false).await?;
         }
         Command::NotifyWhen { .. } => unreachable!("handled in main"),
+        Command::Service(_) => unreachable!("handled in main"),
     }
     Ok(())
 }
