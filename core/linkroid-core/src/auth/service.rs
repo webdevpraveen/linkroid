@@ -172,13 +172,13 @@ impl AuthPipeServer {
                 )
             };
 
-            if pipe.is_err() || pipe.as_ref().is_ok_and(|&h| h == HANDLE::default()) {
+            if pipe.is_invalid() {
                 warn!("failed to create named pipe; retrying in 1s");
                 std::thread::sleep(std::time::Duration::from_secs(1));
                 continue;
             }
 
-            let pipe_handle = pipe.unwrap();
+            let pipe_handle = pipe;
             let connected = unsafe { ConnectNamedPipe(pipe_handle, None) };
             if connected.is_ok()
                 || unsafe { windows::Win32::Foundation::GetLastError() }
