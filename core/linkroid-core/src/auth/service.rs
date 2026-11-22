@@ -108,6 +108,63 @@ impl AuthPipeServer {
                 let success = self.credential_store.revoke().unwrap_or(false);
                 IpcResponse::CredentialRevoked { success }
             }
+            IpcRequest::GetLogonSerialization { session_id } => {
+                if self.auth.session_state(&session_id)
+                    != linkroid_protocol::auth::ipc::UnlockState::Success
+                {
+                    return IpcResponse::Error {
+                        code: 403,
+                        message: "session not authenticated or expired".into(),
+                    };
+                }
+                self.auth.set_session_state(
+                    &session_id,
+                    linkroid_protocol::auth::ipc::UnlockState::Expired,
+                );
+
+                match self.credential_store.load() {
+                    Ok(Some((username, domain, secret))) => {
+                        let domain_user = match domain {
+                            Some(ref d) if !d.is_empty() => format!("{d}\\{username}"),
+                            _ => username,
+                        };
+                        #[cfg(windows)]
+                        {
+                            match pack_credentials(&domain_user, secret.as_bytes()) {
+                                Ok(serialized_buffer) => {
+                                    let auth_package_id = lookup_negotiate_package_id();
+                                    IpcResponse::LogonSerialization {
+                                        auth_package: "Negotiate".into(),
+                                        auth_package_id,
+                                        serialized_buffer,
+                                    }
+                                }
+                                Err(e) => IpcResponse::Error {
+                                    code: 500,
+                                    message: e,
+                                },
+                            }
+                        }
+                        #[cfg(not(windows))]
+                        {
+                            let _ = domain_user;
+                            IpcResponse::LogonSerialization {
+                                auth_package: "Negotiate".into(),
+                                auth_package_id: 1,
+                                serialized_buffer: vec![0u8; 128],
+                            }
+                        }
+                    }
+                    Ok(None) => IpcResponse::Error {
+                        code: 404,
+                        message: "no credentials enrolled on this workstation".into(),
+                    },
+                    Err(e) => IpcResponse::Error {
+                        code: 500,
+                        message: e,
+                    },
+                }
+            }
         }
     }
 
@@ -279,6 +336,82 @@ pub fn lock_workstation() -> Result<(), String> {
     {
         Ok(())
     }
+}
+
+#[cfg(windows)]
+fn pack_credentials(username: &str, password_utf8: &[u8]) -> Result<Vec<u8>, String> {
+    use windows::{
+        core::HSTRING,
+        Win32::Security::Credentials::{
+            CredPackAuthenticationBufferW, CRED_PACK_PROTECTED_CREDENTIALS,
+        },
+    };
+
+    let user_h = HSTRING::from(username);
+    let pass_str = std::str::from_utf8(password_utf8).map_err(|e| e.to_string())?;
+    let pass_h = HSTRING::from(pass_str);
+
+    let mut size = 0u32;
+    unsafe {
+        let _ = CredPackAuthenticationBufferW(
+            CRED_PACK_PROTECTED_CREDENTIALS,
+            windows::core::PCWSTR(user_h.as_ptr()),
+            windows::core::PCWSTR(pass_h.as_ptr()),
+            None,
+            &mut size,
+        );
+    }
+    if size == 0 {
+        return Err("failed to determine packed credential buffer size".into());
+    }
+
+    let mut buffer = vec![0u8; size as usize];
+    let ok = unsafe {
+        CredPackAuthenticationBufferW(
+            CRED_PACK_PROTECTED_CREDENTIALS,
+            windows::core::PCWSTR(user_h.as_ptr()),
+            windows::core::PCWSTR(pass_h.as_ptr()),
+            Some(buffer.as_mut_ptr()),
+            &mut size,
+        )
+    };
+    if !ok.as_bool() {
+        return Err("CredPackAuthenticationBufferW failed to pack credential".into());
+    }
+    buffer.truncate(size as usize);
+    Ok(buffer)
+}
+
+#[cfg(windows)]
+fn lookup_negotiate_package_id() -> u32 {
+    use windows::{
+        core::PSTR,
+        Win32::{
+            Foundation::LSA_HANDLE,
+            Security::Authentication::Identity::{
+                LsaConnectUntrusted, LsaDeregisterLogonProcess, LsaLookupAuthenticationPackage,
+                LSA_STRING,
+            },
+        },
+    };
+
+    let mut lsa_handle = LSA_HANDLE::default();
+    if unsafe { LsaConnectUntrusted(&mut lsa_handle) }.is_err() {
+        return 0;
+    }
+
+    let pkg_name = b"Negotiate\0";
+    let mut lsa_str = LSA_STRING {
+        Length: 9,
+        MaximumLength: 10,
+        Buffer: PSTR(pkg_name.as_ptr() as *mut u8),
+    };
+
+    let mut package_id = 0u32;
+    let status = unsafe { LsaLookupAuthenticationPackage(lsa_handle, &mut lsa_str, &mut package_id) };
+    let _ = unsafe { LsaDeregisterLogonProcess(lsa_handle) };
+
+    if status.0 < 0 { 0 } else { package_id }
 }
 
 #[cfg(test)]

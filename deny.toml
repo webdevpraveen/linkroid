@@ -41,6 +41,7 @@ exceptions = [
     { crate = "linkroid-cli", allow = ["GPL-3.0-or-later"] },
     { crate = "linkroid-desktop", allow = ["GPL-3.0-or-later"] },
     { crate = "linkroid-vcam", allow = ["GPL-3.0-or-later"] },
+    { crate = "linkroid-credential-provider", allow = ["GPL-3.0-or-later"] },
     { crate = "xtask", allow = ["GPL-3.0-or-later"] },
     { crate = "s1-qt-rust", allow = ["GPL-3.0-or-later"] },
 ]

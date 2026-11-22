@@ -132,6 +132,8 @@ pub mod ipc {
         },
         /// Clears stored credentials and un-enrolls biometric unlock.
         RevokeCredential,
+        /// Retrieves the packed logon credential for an authenticated session.
+        GetLogonSerialization { session_id: String },
     }
 
     /// Response messages returned by the Windows Service.
@@ -159,6 +161,12 @@ pub mod ipc {
         },
         CredentialRevoked {
             success: bool,
+        },
+        LogonSerialization {
+            auth_package: String,
+            auth_package_id: u32,
+            #[serde(with = "serde_bytes")]
+            serialized_buffer: Vec<u8>,
         },
         Error {
             code: u32,
