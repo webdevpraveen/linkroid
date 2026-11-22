@@ -116,18 +116,19 @@ impl AuthPipeServer {
     pub fn run(&self) -> Result<(), String> {
         use windows::{
             Win32::{
-                Foundation::{CloseHandle, GENERIC_READ, GENERIC_WRITE, HANDLE, LocalFree},
+                Foundation::{CloseHandle, HANDLE, LocalFree},
                 Security::{
                     Authorization::ConvertStringSecurityDescriptorToSecurityDescriptorW,
                     PSECURITY_DESCRIPTOR, SECURITY_ATTRIBUTES,
                 },
                 System::Pipes::{
                     ConnectNamedPipe, CreateNamedPipeW, DisconnectNamedPipe,
-                    FILE_FLAG_FIRST_PIPE_INSTANCE, PIPE_ACCESS_DUPLEX, PIPE_READMODE_MESSAGE,
-                    PIPE_REJECT_REMOTE_CLIENTS, PIPE_TYPE_MESSAGE, PIPE_UNLIMITED_INSTANCES,
-                    PIPE_WAIT,
+                    PIPE_READMODE_MESSAGE, PIPE_REJECT_REMOTE_CLIENTS,
+                    PIPE_TYPE_MESSAGE, PIPE_UNLIMITED_INSTANCES, PIPE_WAIT,
                 },
-                Storage::FileSystem::{ReadFile, WriteFile},
+                Storage::FileSystem::{
+                    FILE_FLAG_FIRST_PIPE_INSTANCE, PIPE_ACCESS_DUPLEX, ReadFile, WriteFile,
+                },
             },
             core::{HSTRING, PCWSTR, w},
         };
