@@ -58,7 +58,6 @@ struct EncryptedRecord {
     version: u32,
     username: String,
     domain: Option<String>,
-    #[serde(with = "serde_bytes")]
     ciphertext: Vec<u8>,
 }
 
