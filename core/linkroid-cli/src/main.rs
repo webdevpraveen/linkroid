@@ -2602,7 +2602,7 @@ fn main() -> Result<()> {
                             println!("Linkroid auth service running on Named Pipe. Press Ctrl+C to stop.");
                             let server_res = tokio::task::spawn_blocking(move || server.run()).await;
                             node.shutdown().await;
-                            server_res.map_err(|e| anyhow::anyhow!(e))??;
+                            server_res.map_err(|e| anyhow::anyhow!(e))?.map_err(|e| anyhow::anyhow!(e))?;
                             return Ok(0);
                         }
                     }
