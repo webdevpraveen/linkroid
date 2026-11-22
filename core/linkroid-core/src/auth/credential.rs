@@ -167,7 +167,7 @@ fn encrypt_dpapi(data: &[u8]) -> Result<Vec<u8>, String> {
     };
     let mut out_blob = CRYPT_INTEGER_BLOB::default();
 
-    let success = unsafe {
+    unsafe {
         CryptProtectData(
             &mut in_blob,
             None,
@@ -177,11 +177,8 @@ fn encrypt_dpapi(data: &[u8]) -> Result<Vec<u8>, String> {
             CRYPTPROTECT_LOCAL_MACHINE | CRYPTPROTECT_UI_FORBIDDEN,
             &mut out_blob,
         )
-    };
-
-    if !success.as_bool() {
-        return Err("CryptProtectData failed".into());
     }
+    .map_err(|e| format!("CryptProtectData failed: {e}"))?;
 
     let ciphertext = unsafe {
         std::slice::from_raw_parts(out_blob.pbData, out_blob.cbData as usize).to_vec()
@@ -207,7 +204,7 @@ fn decrypt_dpapi(data: &[u8]) -> Result<ZeroizedSecret, String> {
     };
     let mut out_blob = CRYPT_INTEGER_BLOB::default();
 
-    let success = unsafe {
+    unsafe {
         CryptUnprotectData(
             &mut in_blob,
             None,
@@ -217,11 +214,8 @@ fn decrypt_dpapi(data: &[u8]) -> Result<ZeroizedSecret, String> {
             CRYPTPROTECT_UI_FORBIDDEN,
             &mut out_blob,
         )
-    };
-
-    if !success.as_bool() {
-        return Err("CryptUnprotectData failed".into());
     }
+    .map_err(|e| format!("CryptUnprotectData failed: {e}"))?;
 
     let secret_bytes = unsafe {
         std::slice::from_raw_parts(out_blob.pbData, out_blob.cbData as usize).to_vec()

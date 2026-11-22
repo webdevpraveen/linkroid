@@ -269,7 +269,7 @@ pub fn lock_workstation() -> Result<(), String> {
             let ok = unsafe {
                 WTSDisconnectSession(WTS_CURRENT_SERVER_HANDLE, active_session, false)
             };
-            if ok.as_bool() {
+            if ok.is_ok() {
                 return Ok(());
             }
         }
