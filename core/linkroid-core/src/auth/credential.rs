@@ -266,13 +266,10 @@ mod tests {
 
     #[test]
     fn test_zeroized_secret_scrubbing() {
-        let mut secret = ZeroizedSecret::new(vec![0x42; 64]);
+        let secret = ZeroizedSecret::new(vec![0x42; 64]);
         assert_eq!(secret.as_bytes()[0], 0x42);
-        // Explicitly test drop cleans memory
-        let ptr = secret.0.as_mut_ptr();
+        assert_eq!(secret.as_bytes().len(), 64);
         drop(secret);
-        // Note: pointer deref after free is UB in safe code, but ZeroizedSecret's Drop implementation
-        // executes volatile writes and a compiler fence before deallocation.
     }
 
     #[test]

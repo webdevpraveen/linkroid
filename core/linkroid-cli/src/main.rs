@@ -5890,13 +5890,13 @@ async fn run_notify_when(
 
 fn run_service_client_lock() -> Result<i32> {
     println!("Sending Lock command via Linkroid auth pipe…");
-    let resp = send_pipe_request(&linkroid_protocol::auth::ipc::IpcRequest::LockWorkStation)?;
+    let resp = send_pipe_request(&linkroid_core::auth::ipc::IpcRequest::LockWorkStation)?;
     match resp {
-        linkroid_protocol::auth::ipc::IpcResponse::LockAcknowledged { success: true } => {
+        linkroid_core::auth::ipc::IpcResponse::LockAcknowledged { success: true } => {
             println!("✓ Workstation lock initiated.");
             Ok(0)
         }
-        linkroid_protocol::auth::ipc::IpcResponse::Error { message, .. } => {
+        linkroid_core::auth::ipc::IpcResponse::Error { message, .. } => {
             eprintln!("Error locking workstation: {message}");
             Ok(1)
         }
@@ -5908,9 +5908,9 @@ fn run_service_client_lock() -> Result<i32> {
 }
 
 fn run_service_client_status() -> Result<i32> {
-    let resp = send_pipe_request(&linkroid_protocol::auth::ipc::IpcRequest::QueryStatus)?;
+    let resp = send_pipe_request(&linkroid_core::auth::ipc::IpcRequest::QueryStatus)?;
     match resp {
-        linkroid_protocol::auth::ipc::IpcResponse::Status {
+        linkroid_core::auth::ipc::IpcResponse::Status {
             enrolled,
             phone_connected,
             phone_name,
@@ -5923,7 +5923,7 @@ fn run_service_client_status() -> Result<i32> {
             println!("  Locked out:      {locked_out}");
             Ok(0)
         }
-        linkroid_protocol::auth::ipc::IpcResponse::Error { message, .. } => {
+        linkroid_core::auth::ipc::IpcResponse::Error { message, .. } => {
             eprintln!("Error querying service status: {message}");
             Ok(1)
         }
@@ -5935,9 +5935,9 @@ fn run_service_client_status() -> Result<i32> {
 }
 
 fn run_service_client_revoke() -> Result<i32> {
-    let resp = send_pipe_request(&linkroid_protocol::auth::ipc::IpcRequest::RevokeCredential)?;
+    let resp = send_pipe_request(&linkroid_core::auth::ipc::IpcRequest::RevokeCredential)?;
     match resp {
-        linkroid_protocol::auth::ipc::IpcResponse::CredentialRevoked { success } => {
+        linkroid_core::auth::ipc::IpcResponse::CredentialRevoked { success } => {
             if success {
                 println!("✓ Stored credential wiped and phone enrollment revoked.");
             } else {
@@ -5945,7 +5945,7 @@ fn run_service_client_revoke() -> Result<i32> {
             }
             Ok(0)
         }
-        linkroid_protocol::auth::ipc::IpcResponse::Error { message, .. } => {
+        linkroid_core::auth::ipc::IpcResponse::Error { message, .. } => {
             eprintln!("Error revoking credential: {message}");
             Ok(1)
         }
@@ -5959,8 +5959,8 @@ fn run_service_client_revoke() -> Result<i32> {
 #[cfg(windows)]
 #[allow(unsafe_code)]
 fn send_pipe_request(
-    req: &linkroid_protocol::auth::ipc::IpcRequest,
-) -> Result<linkroid_protocol::auth::ipc::IpcResponse> {
+    req: &linkroid_core::auth::ipc::IpcRequest,
+) -> Result<linkroid_core::auth::ipc::IpcResponse> {
     use windows::{
         Win32::{
             Foundation::CloseHandle,
@@ -5971,7 +5971,7 @@ fn send_pipe_request(
         },
         core::{HSTRING, PCWSTR},
     };
-    use linkroid_protocol::auth::ipc::{
+    use linkroid_core::auth::ipc::{
         AUTH_PIPE_NAME, decode_ipc_message, encode_ipc_message,
     };
 
@@ -6023,8 +6023,8 @@ fn send_pipe_request(
 
 #[cfg(not(windows))]
 fn send_pipe_request(
-    _req: &linkroid_protocol::auth::ipc::IpcRequest,
-) -> Result<linkroid_protocol::auth::ipc::IpcResponse> {
+    _req: &linkroid_core::auth::ipc::IpcRequest,
+) -> Result<linkroid_core::auth::ipc::IpcResponse> {
     bail!("Named Pipe IPC is only supported on Windows")
 }
 

@@ -17,10 +17,14 @@ use std::{
     },
 };
 
+#[cfg(windows)]
 use linkroid_protocol::auth::ipc::{
-    AUTH_PIPE_NAME, IpcRequest, IpcResponse, decode_ipc_message, encode_ipc_message,
+    AUTH_PIPE_NAME, decode_ipc_message, encode_ipc_message,
 };
-use tracing::{info, warn};
+use linkroid_protocol::auth::ipc::{IpcRequest, IpcResponse};
+#[cfg(windows)]
+use tracing::info;
+use tracing::warn;
 
 use super::{AuthManager, credential::CredentialStore};
 

@@ -11,6 +11,8 @@
 pub mod credential;
 pub mod service;
 
+pub use linkroid_protocol::auth::ipc;
+
 use std::{
     collections::HashMap,
     sync::Mutex,
