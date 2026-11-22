@@ -161,7 +161,7 @@ fn encrypt_dpapi(data: &[u8]) -> Result<Vec<u8>, String> {
         CRYPTPROTECT_LOCAL_MACHINE, CRYPTPROTECT_UI_FORBIDDEN, CRYPT_INTEGER_BLOB, CryptProtectData,
     };
 
-    let mut in_blob = CRYPT_INTEGER_BLOB {
+    let in_blob = CRYPT_INTEGER_BLOB {
         cbData: data.len() as u32,
         pbData: data.as_ptr() as *mut u8,
     };
@@ -169,7 +169,7 @@ fn encrypt_dpapi(data: &[u8]) -> Result<Vec<u8>, String> {
 
     unsafe {
         CryptProtectData(
-            &mut in_blob,
+            &in_blob,
             None,
             None,
             None,
@@ -198,7 +198,7 @@ fn decrypt_dpapi(data: &[u8]) -> Result<ZeroizedSecret, String> {
         CRYPTPROTECT_UI_FORBIDDEN, CRYPT_INTEGER_BLOB, CryptUnprotectData,
     };
 
-    let mut in_blob = CRYPT_INTEGER_BLOB {
+    let in_blob = CRYPT_INTEGER_BLOB {
         cbData: data.len() as u32,
         pbData: data.as_ptr() as *mut u8,
     };
@@ -206,7 +206,7 @@ fn decrypt_dpapi(data: &[u8]) -> Result<ZeroizedSecret, String> {
 
     unsafe {
         CryptUnprotectData(
-            &mut in_blob,
+            &in_blob,
             None,
             None,
             None,
