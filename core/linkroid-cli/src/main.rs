@@ -5995,8 +5995,7 @@ fn send_pipe_request(
     unsafe {
         WriteFile(
             handle,
-            Some(encoded.as_ptr().cast()),
-            encoded.len() as u32,
+            Some(&encoded),
             Some(&mut written),
             None,
         )
@@ -6008,8 +6007,7 @@ fn send_pipe_request(
     unsafe {
         ReadFile(
             handle,
-            Some(buf.as_mut_ptr().cast()),
-            buf.len() as u32,
+            Some(&mut buf),
             Some(&mut read_bytes),
             None,
         )

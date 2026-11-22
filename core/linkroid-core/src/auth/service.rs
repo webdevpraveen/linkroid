@@ -189,8 +189,7 @@ impl AuthPipeServer {
                 let read_ok = unsafe {
                     ReadFile(
                         pipe_handle,
-                        Some(read_buf.as_mut_ptr().cast()),
-                        read_buf.len() as u32,
+                        Some(&mut read_buf),
                         Some(&mut bytes_read),
                         None,
                     )
@@ -211,8 +210,7 @@ impl AuthPipeServer {
                         let _ = unsafe {
                             WriteFile(
                                 pipe_handle,
-                                Some(encoded_resp.as_ptr().cast()),
-                                encoded_resp.len() as u32,
+                                Some(&encoded_resp),
                                 Some(&mut bytes_written),
                                 None,
                             )
