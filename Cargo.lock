@@ -2482,6 +2482,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "linkroid-credential-provider"
+version = "0.1.1"
+dependencies = [
+ "libc",
+ "linkroid-protocol",
+ "windows",
+ "windows-core",
+]
+
+[[package]]
 name = "linkroid-desktop"
 version = "0.1.1"
 dependencies = [

@@ -121,9 +121,9 @@ jobs:
           # Qt 6.12's repository layout needs a current aqtinstall.
           aqtsource: git+https://github.com/miurahr/aqtinstall.git
       - name: Clippy
-        run: cargo clippy --locked -p linkroid-desktop -p linkroid-vcam --all-targets -- -D warnings
+        run: cargo clippy --locked -p linkroid-desktop -p linkroid-vcam -p linkroid-credential-provider --all-targets -- -D warnings
       - name: Tests
-        run: cargo test --locked -p linkroid-desktop -p linkroid-vcam
+        run: cargo test --locked -p linkroid-desktop -p linkroid-vcam -p linkroid-credential-provider
       - name: QML tests
         shell: pwsh
         run: ./scripts/qml-tests.ps1
@@ -289,9 +289,9 @@ jobs:
           cache: true
           aqtsource: git+https://github.com/miurahr/aqtinstall.git
       - name: Clippy
-        run: cargo clippy --locked -p linkroid-desktop -p linkroid-vcam --all-targets -- -D warnings
+        run: cargo clippy --locked -p linkroid-desktop -p linkroid-vcam -p linkroid-credential-provider --all-targets -- -D warnings
       - name: Tests
-        run: cargo test --locked -p linkroid-desktop -p linkroid-vcam
+        run: cargo test --locked -p linkroid-desktop -p linkroid-vcam -p linkroid-credential-provider
       - name: Video adapter fallback
         run: bash desktop/app/tests/linux_video_dispatch_test.sh
       - name: Check without the optional FFmpeg backend
