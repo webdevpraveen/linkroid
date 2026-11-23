@@ -1730,16 +1730,17 @@ impl Node {
             away_switch: tokio::sync::Mutex::new(()),
         });
 
-        let shared_for_auth = Arc::clone(&shared);
+        let weak_shared = Arc::downgrade(&shared);
         shared.auth.set_challenge_sender(Arc::new(move |peer, challenge| {
-            let shared = Arc::clone(&shared_for_auth);
-            tokio::spawn(async move {
-                if let Some(session) = shared.session(&peer) {
-                    if let Ok(env) = Envelope::new(types::AUTH_UNLOCK_CHALLENGE, &challenge) {
-                        let _ = session.send(env).await;
+            if let Some(shared) = weak_shared.upgrade() {
+                shared.runtime.spawn(async move {
+                    if let Some(session) = shared.session(&peer) {
+                        if let Ok(env) = Envelope::new(types::AUTH_UNLOCK_CHALLENGE, &challenge) {
+                            let _ = session.send(env).await;
+                        }
                     }
-                }
-            });
+                });
+            }
         }));
 
         if config.lan_discovery {

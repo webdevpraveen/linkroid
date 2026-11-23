@@ -82,7 +82,6 @@ pub use mirror::{MirrorSend, MirrorSink, MirrorStream, PC_MIRROR_TOGGLE};
 pub use linkroid_protocol::messages::clip::{
     IMAGE_TYPES as CLIP_IMAGE_TYPES, MAX_IMAGE_BYTES as CLIP_MAX_IMAGE_BYTES,
 };
-pub use linkroid_protocol;
 pub use linkroid_protocol::{
     DeviceId, PacketKind,
     messages::{
