@@ -10,6 +10,7 @@
 use std::{path::PathBuf, sync::Arc, time::Duration};
 
 use linkroid_core as core;
+use core::linkroid_protocol;
 use linkroid_core::{
     ConnectionPath, DeviceId, LinkState, Node, NodeConfig, NodeEvent, PairingEvent,
     features::{CapabilityMatrix, FeatureState},

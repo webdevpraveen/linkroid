@@ -1786,7 +1786,7 @@ impl Node {
         peer: DeviceId,
         challenge: linkroid_protocol::auth::UnlockChallenge,
     ) -> Result<()> {
-        let session = self.shared.session(&peer).ok_or(Error::NotConnected(peer))?;
+        let session = self.shared.session(&peer).ok_or(Error::Offline)?;
         let env = Envelope::new(types::AUTH_UNLOCK_CHALLENGE, &challenge)?;
         session.send(env).await.map_err(Into::into)
     }
@@ -1797,7 +1797,7 @@ impl Node {
         peer: DeviceId,
         response: linkroid_protocol::auth::UnlockResponse,
     ) -> Result<()> {
-        let session = self.shared.session(&peer).ok_or(Error::NotConnected(peer))?;
+        let session = self.shared.session(&peer).ok_or(Error::Offline)?;
         let env = Envelope::new(types::AUTH_UNLOCK_RESPONSE, &response)?;
         session.send(env).await.map_err(Into::into)
     }
@@ -1808,7 +1808,7 @@ impl Node {
         peer: DeviceId,
         request: linkroid_protocol::auth::SignedLockRequest,
     ) -> Result<()> {
-        let session = self.shared.session(&peer).ok_or(Error::NotConnected(peer))?;
+        let session = self.shared.session(&peer).ok_or(Error::Offline)?;
         let env = Envelope::new(types::AUTH_LOCK_REQUEST, &request)?;
         session.send(env).await.map_err(Into::into)
     }
