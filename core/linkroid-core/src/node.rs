@@ -1730,6 +1730,18 @@ impl Node {
             away_switch: tokio::sync::Mutex::new(()),
         });
 
+        let shared_for_auth = Arc::clone(&shared);
+        shared.auth.set_challenge_sender(Arc::new(move |peer, challenge| {
+            let shared = Arc::clone(&shared_for_auth);
+            tokio::spawn(async move {
+                if let Some(session) = shared.session(&peer) {
+                    if let Ok(env) = Envelope::new(types::AUTH_UNLOCK_CHALLENGE, &challenge) {
+                        let _ = session.send(env).await;
+                    }
+                }
+            });
+        }));
+
         if config.lan_discovery {
             start_lan_discovery(&shared, &config.device.name)?;
         }
@@ -1766,6 +1778,39 @@ impl Node {
     /// Returns the biometric authentication manager for this node.
     pub fn auth(&self) -> Arc<crate::auth::AuthManager> {
         self.shared.auth.clone()
+    }
+
+    /// Sends an unlock challenge to a connected peer phone.
+    pub async fn send_unlock_challenge(
+        &self,
+        peer: DeviceId,
+        challenge: linkroid_protocol::auth::UnlockChallenge,
+    ) -> Result<()> {
+        let session = self.shared.session(&peer).ok_or(Error::NotConnected(peer))?;
+        let env = Envelope::new(types::AUTH_UNLOCK_CHALLENGE, &challenge)?;
+        session.send(env).await.map_err(Into::into)
+    }
+
+    /// Sends an unlock response with biometric signature to a peer PC.
+    pub async fn send_unlock_response(
+        &self,
+        peer: DeviceId,
+        response: linkroid_protocol::auth::UnlockResponse,
+    ) -> Result<()> {
+        let session = self.shared.session(&peer).ok_or(Error::NotConnected(peer))?;
+        let env = Envelope::new(types::AUTH_UNLOCK_RESPONSE, &response)?;
+        session.send(env).await.map_err(Into::into)
+    }
+
+    /// Sends a signed lock request to lock the peer PC.
+    pub async fn send_lock_request(
+        &self,
+        peer: DeviceId,
+        request: linkroid_protocol::auth::SignedLockRequest,
+    ) -> Result<()> {
+        let session = self.shared.session(&peer).ok_or(Error::NotConnected(peer))?;
+        let env = Envelope::new(types::AUTH_LOCK_REQUEST, &request)?;
+        session.send(env).await.map_err(Into::into)
     }
 
     /// Whether remote / mobile data connections outside the local Wi-Fi/LAN are allowed.

@@ -370,6 +370,11 @@ Section "Install"
 
   WriteUninstaller "$INSTDIR\uninstall.exe"
 
+  ; Register Credential Provider COM DLL for phone biometric unlock
+  ${If} ${FileExists} "$INSTDIR\linkroid_credential_provider.dll"
+    ExecWait 'regsvr32.exe /s "$INSTDIR\linkroid_credential_provider.dll"'
+  ${EndIf}
+
   ; Phones reach this PC over UDP (QUIC) and find it with mDNS.
   !insertmacro Progress "step firewall"
   nsExec::Exec 'netsh advfirewall firewall delete rule name="${FIREWALL_RULE}"'
@@ -482,6 +487,9 @@ Section "Uninstall"
   ${EndIf}
 
   !insertmacro Progress "step cleanup"
+  ${If} ${FileExists} "$INSTDIR\linkroid_credential_provider.dll"
+    ExecWait 'regsvr32.exe /u /s "$INSTDIR\linkroid_credential_provider.dll"'
+  ${EndIf}
   nsExec::Exec 'powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command "try { Get-AppxPackage -Name \"Linkroid.Desktop\" -ErrorAction SilentlyContinue | Remove-AppxPackage -ErrorAction SilentlyContinue } catch {}"'
   nsExec::Exec 'netsh advfirewall firewall delete rule name="${FIREWALL_RULE}"'
   nsExec::Exec 'schtasks /Delete /TN "Linkroid Update" /F'

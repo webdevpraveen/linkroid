@@ -48,6 +48,15 @@
     <string name="connected">Connected</string>
     <string name="not_connected">Not connected</string>
 
+    <!-- Biometric Remote Unlock & Lock -->
+    <string name="channel_auth_unlock">PC Unlock Requests</string>
+    <string name="auth_unlock_title">Unlock %1$s</string>
+    <string name="auth_unlock_desc">Touch the fingerprint sensor to log in to %1$s</string>
+    <string name="auth_unlock_notif_title">Unlock %1$s</string>
+    <string name="auth_unlock_notif_text">Tap to confirm with your fingerprint</string>
+    <string name="auth_lock_action">Lock PC</string>
+    <string name="auth_lock_confirm">PC locked successfully</string>
+
     <!-- Settings -->
     <string name="settings_title">Settings</string>
     <string name="settings_appearance">Appearance</string>

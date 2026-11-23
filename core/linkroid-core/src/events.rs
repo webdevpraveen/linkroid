@@ -284,4 +284,9 @@ pub enum NodeEvent {
         peer_name: String,
         dropped_count: u32,
     },
+    /// A paired PC sent an unlock challenge requesting biometric verification.
+    AuthUnlockChallenge {
+        device: DeviceId,
+        challenge: linkroid_protocol::auth::UnlockChallenge,
+    },
 }

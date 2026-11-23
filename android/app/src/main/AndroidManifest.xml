@@ -50,6 +50,8 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <!-- Find my phone. -->
     <uses-permission android:name="android.permission.VIBRATE" />
+    <!-- Biometric fingerprint authentication to unlock Windows PC. -->
+    <uses-permission android:name="android.permission.USE_BIOMETRIC" />
     <!-- Asking to run unrestricted in the background: phones such as Samsung's
          otherwise freeze the app, and PCs can't reach it. -->
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
@@ -270,6 +272,15 @@
         <!-- Shows Android's screen capture prompt for a PC's request. -->
         <activity
             android:name=".mirror.MirrorConsentActivity"
+            android:exported="false"
+            android:excludeFromRecents="true"
+            android:noHistory="false"
+            android:taskAffinity=""
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+        <!-- Biometric prompt to unlock PC with phone fingerprint. -->
+        <activity
+            android:name=".auth.BiometricPromptActivity"
             android:exported="false"
             android:excludeFromRecents="true"
             android:noHistory="false"

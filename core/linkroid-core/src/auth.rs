@@ -89,14 +89,24 @@ impl Default for RateLimitTracker {
     }
 }
 
+pub type ChallengeSender = Arc<dyn Fn(DeviceId, UnlockChallenge) + Send + Sync>;
+
 /// Core authentication manager handling challenges, signature verification, and rate limiting.
-#[derive(Debug)]
 pub struct AuthManager {
     local_pc_id: DeviceId,
     enrolled_phones: Mutex<HashMap<DeviceId, Vec<u8>>>,
     challenges: Mutex<HashMap<String, ActiveChallenge>>,
     rate_limits: Mutex<HashMap<DeviceId, RateLimitTracker>>,
     session_states: Mutex<HashMap<String, UnlockState>>,
+    challenge_sender: Mutex<Option<ChallengeSender>>,
+}
+
+impl std::fmt::Debug for AuthManager {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("AuthManager")
+            .field("local_pc_id", &self.local_pc_id)
+            .finish()
+    }
 }
 
 impl AuthManager {
@@ -108,7 +118,14 @@ impl AuthManager {
             challenges: Mutex::new(HashMap::new()),
             rate_limits: Mutex::new(HashMap::new()),
             session_states: Mutex::new(HashMap::new()),
+            challenge_sender: Mutex::new(None),
         }
+    }
+
+    /// Registers a callback invoked whenever an unlock challenge is created.
+    pub fn set_challenge_sender(&self, sender: ChallengeSender) {
+        let mut s = self.challenge_sender.lock().unwrap_or_else(|e| e.into_inner());
+        *s = Some(sender);
     }
 
     /// Enrolls or updates an Android phone's biometric EC P-256 public key (SEC1 uncompressed).
@@ -239,6 +256,14 @@ impl AuthManager {
                 expiry,
             },
         );
+
+        let sender = {
+            let s = self.challenge_sender.lock().unwrap_or_else(|e| e.into_inner());
+            s.clone()
+        };
+        if let Some(s) = sender {
+            s(phone_id, challenge.clone());
+        }
 
         Ok(challenge)
     }

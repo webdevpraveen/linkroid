@@ -612,6 +612,47 @@ async fn handle(shared: &Arc<Shared>, session: &Arc<Session>, env: Envelope) -> 
             tracing::info!(peer = %peer.short(), "peer unpaired this device");
             shared.forget_peer(&peer).await?;
         }
+        types::AUTH_UNLOCK_CHALLENGE => {
+            let challenge = env.body::<linkroid_protocol::auth::UnlockChallenge>()?;
+            shared.emit(NodeEvent::AuthUnlockChallenge { device: peer, challenge });
+        }
+        types::AUTH_UNLOCK_RESPONSE => {
+            let resp = env.body::<linkroid_protocol::auth::UnlockResponse>()?;
+            let _ = shared.auth.verify_unlock_response(&peer, &resp);
+        }
+        types::AUTH_LOCK_REQUEST => {
+            let req = env.body::<linkroid_protocol::auth::SignedLockRequest>()?;
+            if shared.auth.verify_lock_request(&peer, &req).is_ok() {
+                #[cfg(windows)]
+                let _ = crate::auth::service::lock_workstation();
+                session
+                    .send(
+                        Envelope::new(
+                            types::AUTH_LOCK_RESPONSE,
+                            &linkroid_protocol::auth::SignedLockResponse {
+                                success: true,
+                                message: None,
+                            },
+                        )?
+                        .reply_to(env.id),
+                    )
+                    .await?;
+            } else {
+                session
+                    .send(
+                        Envelope::new(
+                            types::AUTH_LOCK_RESPONSE,
+                            &linkroid_protocol::auth::SignedLockResponse {
+                                success: false,
+                                message: Some("lock verification failed".into()),
+                            },
+                        )?
+                        .reply_to(env.id),
+                    )
+                    .await?;
+            }
+        }
+        types::AUTH_LOCK_RESPONSE => {}
         t if t.starts_with("notify.") && crate::notifications::handle(shared, session, &env).await? => {}
         t if t.starts_with("media.") && crate::media::handle(shared, session, &env).await? => {}
         t if (t.starts_with("pc.") || t.starts_with("link.") || t.starts_with("task."))
