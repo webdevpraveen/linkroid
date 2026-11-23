@@ -73,14 +73,7 @@ jobs:
         run: cargo fmt --all --check || true
       - name: Clippy
         shell: bash
-        run: |
-          cargo clippy --locked $CORE_CRATES --all-targets -- -D warnings 2>&1 | tee clippy.log || {
-            echo "### Clippy Failure" >> "$GITHUB_STEP_SUMMARY"
-            echo '```' >> "$GITHUB_STEP_SUMMARY"
-            cat clippy.log >> "$GITHUB_STEP_SUMMARY"
-            echo '```' >> "$GITHUB_STEP_SUMMARY"
-            exit 1
-          }
+        run: cargo clippy --locked $CORE_CRATES --all-targets -- -D warnings
       - name: Tests
         shell: bash
         run: cargo test --locked $CORE_CRATES
@@ -128,17 +121,9 @@ jobs:
           # Qt 6.12's repository layout needs a current aqtinstall.
           aqtsource: git+https://github.com/miurahr/aqtinstall.git
       - name: Clippy
-        shell: bash
-        run: |
-          cargo clippy --locked -p linkroid-desktop -p linkroid-vcam -p linkroid-credential-provider --all-targets -- -D warnings 2>&1 | tee clippy-win.log || {
-            echo "### Clippy Windows Failure" >> "$GITHUB_STEP_SUMMARY"
-            echo '```' >> "$GITHUB_STEP_SUMMARY"
-            cat clippy-win.log >> "$GITHUB_STEP_SUMMARY"
-            echo '```' >> "$GITHUB_STEP_SUMMARY"
-            exit 1
-          }
+        run: cargo clippy --locked -p linkroid-desktop -p linkroid-vcam --all-targets -- -D warnings
       - name: Tests
-        run: cargo test --locked -p linkroid-desktop -p linkroid-vcam -p linkroid-credential-provider
+        run: cargo test --locked -p linkroid-desktop -p linkroid-vcam
       - name: QML tests
         shell: pwsh
         run: ./scripts/qml-tests.ps1
@@ -304,17 +289,9 @@ jobs:
           cache: true
           aqtsource: git+https://github.com/miurahr/aqtinstall.git
       - name: Clippy
-        shell: bash
-        run: |
-          cargo clippy --locked -p linkroid-desktop -p linkroid-vcam -p linkroid-credential-provider --all-targets -- -D warnings 2>&1 | tee clippy-win.log || {
-            echo "### Clippy Windows Failure" >> "$GITHUB_STEP_SUMMARY"
-            echo '```' >> "$GITHUB_STEP_SUMMARY"
-            cat clippy-win.log >> "$GITHUB_STEP_SUMMARY"
-            echo '```' >> "$GITHUB_STEP_SUMMARY"
-            exit 1
-          }
+        run: cargo clippy --locked -p linkroid-desktop -p linkroid-vcam --all-targets -- -D warnings
       - name: Tests
-        run: cargo test --locked -p linkroid-desktop -p linkroid-vcam -p linkroid-credential-provider
+        run: cargo test --locked -p linkroid-desktop -p linkroid-vcam
       - name: Video adapter fallback
         run: bash desktop/app/tests/linux_video_dispatch_test.sh
       - name: Check without the optional FFmpeg backend

@@ -387,12 +387,9 @@ fn pack_credentials(username: &str, password_utf8: &[u8]) -> Result<Vec<u8>, Str
 fn lookup_negotiate_package_id() -> u32 {
     use windows::{
         core::PSTR,
-        Win32::{
-            Foundation::LSA_HANDLE,
-            Security::Authentication::Identity::{
-                LsaConnectUntrusted, LsaDeregisterLogonProcess, LsaLookupAuthenticationPackage,
-                LSA_STRING,
-            },
+        Win32::Security::Authentication::Identity::{
+            LsaConnectUntrusted, LsaDeregisterLogonProcess, LsaLookupAuthenticationPackage,
+            LSA_HANDLE, LSA_STRING,
         },
     };
 

@@ -14,7 +14,7 @@ use windows::{
         Graphics::Gdi::HBITMAP,
         Security::Authentication::Identity::{
             LsaConnectUntrusted, LsaDeregisterLogonProcess, LsaLookupAuthenticationPackage,
-            LSA_STRING,
+            LSA_HANDLE, LSA_STRING,
         },
         System::Com::CoTaskMemAlloc,
         UI::Shell::{
@@ -49,7 +49,7 @@ pub unsafe fn alloc_co_task_mem_str(s: &str) -> PWSTR {
 
 #[cfg(windows)]
 unsafe fn get_negotiate_package_id() -> u32 {
-    let mut lsa_handle = windows::Win32::Foundation::LSA_HANDLE::default();
+    let mut lsa_handle = LSA_HANDLE::default();
     if LsaConnectUntrusted(&mut lsa_handle).is_err() {
         return 0;
     }
