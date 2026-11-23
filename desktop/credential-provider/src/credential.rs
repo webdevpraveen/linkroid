@@ -54,13 +54,13 @@ unsafe fn get_negotiate_package_id() -> u32 {
         return 0;
     }
     let pkg_name = b"Negotiate\0";
-    let mut lsa_str = LSA_STRING {
+    let lsa_str = LSA_STRING {
         Length: 9,
         MaximumLength: 10,
         Buffer: windows::core::PSTR(pkg_name.as_ptr() as *mut u8),
     };
     let mut package_id = 0u32;
-    let status = LsaLookupAuthenticationPackage(lsa_handle, &mut lsa_str, &mut package_id);
+    let status = LsaLookupAuthenticationPackage(lsa_handle, &lsa_str, &mut package_id);
     let _ = LsaDeregisterLogonProcess(lsa_handle);
     if status.0 < 0 {
         0

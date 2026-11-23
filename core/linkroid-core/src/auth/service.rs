@@ -124,6 +124,7 @@ impl AuthPipeServer {
 
                 match self.credential_store.load() {
                     Ok(Some((username, domain, secret))) => {
+                        #[cfg(windows)]
                         let domain_user = match domain {
                             Some(ref d) if !d.is_empty() => format!("{d}\\{username}"),
                             _ => username,
@@ -147,7 +148,7 @@ impl AuthPipeServer {
                         }
                         #[cfg(not(windows))]
                         {
-                            let _ = domain_user;
+                            let _ = (username, domain, secret);
                             IpcResponse::LogonSerialization {
                                 auth_package: "Negotiate".into(),
                                 auth_package_id: 1,
@@ -401,14 +402,14 @@ fn lookup_negotiate_package_id() -> u32 {
     }
 
     let pkg_name = b"Negotiate\0";
-    let mut lsa_str = LSA_STRING {
+    let lsa_str = LSA_STRING {
         Length: 9,
         MaximumLength: 10,
         Buffer: PSTR(pkg_name.as_ptr() as *mut u8),
     };
 
     let mut package_id = 0u32;
-    let status = unsafe { LsaLookupAuthenticationPackage(lsa_handle, &mut lsa_str, &mut package_id) };
+    let status = unsafe { LsaLookupAuthenticationPackage(lsa_handle, &lsa_str, &mut package_id) };
     let _ = unsafe { LsaDeregisterLogonProcess(lsa_handle) };
 
     if status.0 < 0 { 0 } else { package_id }

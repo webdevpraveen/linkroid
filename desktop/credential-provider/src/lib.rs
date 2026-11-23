@@ -141,7 +141,7 @@ pub extern "system" fn DllRegisterServer() -> HRESULT {
         let desc_wide: Vec<u16> = desc.encode_utf16().chain(std::iter::once(0)).collect();
         let _ = RegSetValueExW(
             hkey,
-            PCWSTR(std::ptr::null()),
+            PCWSTR::null(),
             0,
             REG_SZ,
             Some(std::slice::from_raw_parts(
@@ -170,7 +170,7 @@ pub extern "system" fn DllRegisterServer() -> HRESULT {
         }
         let _ = RegSetValueExW(
             hkey,
-            PCWSTR(std::ptr::null()),
+            PCWSTR::null(),
             0,
             REG_SZ,
             Some(std::slice::from_raw_parts(
@@ -214,7 +214,7 @@ pub extern "system" fn DllRegisterServer() -> HRESULT {
         let cp_wide: Vec<u16> = cp_name.encode_utf16().chain(std::iter::once(0)).collect();
         let _ = RegSetValueExW(
             hkey,
-            PCWSTR(std::ptr::null()),
+            PCWSTR::null(),
             0,
             REG_SZ,
             Some(std::slice::from_raw_parts(
