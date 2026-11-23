@@ -132,14 +132,11 @@ impl AuthPipeServer {
                         #[cfg(windows)]
                         {
                             match pack_credentials(&domain_user, secret.as_bytes()) {
-                                Ok(serialized_buffer) => {
-                                    let auth_package_id = lookup_negotiate_package_id();
-                                    IpcResponse::LogonSerialization {
-                                        auth_package: "Negotiate".into(),
-                                        auth_package_id,
-                                        serialized_buffer,
-                                    }
-                                }
+                                Ok(serialized_buffer) => IpcResponse::LogonSerialization {
+                                    auth_package: "Negotiate".into(),
+                                    auth_package_id: 0,
+                                    serialized_buffer,
+                                },
                                 Err(e) => IpcResponse::Error {
                                     code: 500,
                                     message: e,
@@ -367,7 +364,7 @@ fn pack_credentials(username: &str, password_utf8: &[u8]) -> Result<Vec<u8>, Str
     }
 
     let mut buffer = vec![0u8; size as usize];
-    let ok = unsafe {
+    unsafe {
         CredPackAuthenticationBufferW(
             CRED_PACK_PROTECTED_CREDENTIALS,
             windows::core::PCWSTR(user_h.as_ptr()),
@@ -375,41 +372,10 @@ fn pack_credentials(username: &str, password_utf8: &[u8]) -> Result<Vec<u8>, Str
             Some(buffer.as_mut_ptr()),
             &mut size,
         )
-    };
-    if !ok.as_bool() {
-        return Err("CredPackAuthenticationBufferW failed to pack credential".into());
     }
+    .map_err(|e| format!("CredPackAuthenticationBufferW failed to pack credential: {e}"))?;
     buffer.truncate(size as usize);
     Ok(buffer)
-}
-
-#[cfg(windows)]
-fn lookup_negotiate_package_id() -> u32 {
-    use windows::{
-        core::PSTR,
-        Win32::Security::Authentication::Identity::{
-            LsaConnectUntrusted, LsaDeregisterLogonProcess, LsaLookupAuthenticationPackage,
-            LSA_HANDLE, LSA_STRING,
-        },
-    };
-
-    let mut lsa_handle = LSA_HANDLE::default();
-    if unsafe { LsaConnectUntrusted(&mut lsa_handle) }.is_err() {
-        return 0;
-    }
-
-    let pkg_name = b"Negotiate\0";
-    let lsa_str = LSA_STRING {
-        Length: 9,
-        MaximumLength: 10,
-        Buffer: PSTR(pkg_name.as_ptr() as *mut u8),
-    };
-
-    let mut package_id = 0u32;
-    let status = unsafe { LsaLookupAuthenticationPackage(lsa_handle, &lsa_str, &mut package_id) };
-    let _ = unsafe { LsaDeregisterLogonProcess(lsa_handle) };
-
-    if status.0 < 0 { 0 } else { package_id }
 }
 
 #[cfg(test)]

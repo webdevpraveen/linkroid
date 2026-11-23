@@ -49,10 +49,10 @@ pub unsafe fn alloc_co_task_mem_str(s: &str) -> PWSTR {
 
 #[cfg(windows)]
 unsafe fn get_negotiate_package_id() -> u32 {
-    let mut lsa_handle = LSA_HANDLE::default();
-    if LsaConnectUntrusted(&mut lsa_handle).is_err() {
-        return 0;
-    }
+    let lsa_handle = match LsaConnectUntrusted() {
+        Ok(h) => h,
+        Err(_) => return 0,
+    };
     let pkg_name = b"Negotiate\0";
     let lsa_str = LSA_STRING {
         Length: 9,
