@@ -15,7 +15,7 @@ members = [
 exclude = ["third_party"]
 
 [workspace.package]
-version = "0.1.1"
+version = "0.2.0"
 edition = "2024"
 rust-version = "1.97"
 authors = ["Praveen <webdevpraveen>", "The Linkroid contributors"]
@@ -24,13 +24,13 @@ repository = "https://github.com/webdevpraveen/linkroid"
 # Each release's name, from release milestone (0.1 Genesis, …); the release
 # workflow puts it in the release's title.
 [workspace.metadata.release]
-name = "Genesis"
+name = "Sentinel"
 
 [workspace.dependencies]
-linkroid-adb = { path = "core/linkroid-adb", version = "0.1.1" }
-linkroid-protocol = { path = "core/linkroid-protocol", version = "0.1.1" }
-linkroid-core = { path = "core/linkroid-core", version = "0.1.1" }
-linkroid-vcam = { path = "desktop/vcam", version = "0.1.1" }
+linkroid-adb = { path = "core/linkroid-adb", version = "0.2.0" }
+linkroid-protocol = { path = "core/linkroid-protocol", version = "0.2.0" }
+linkroid-core = { path = "core/linkroid-core", version = "0.2.0" }
+linkroid-vcam = { path = "desktop/vcam", version = "0.2.0" }
 
 anyhow = "1"
 ciborium = "0.2"

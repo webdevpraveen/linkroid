@@ -2418,7 +2418,7 @@ dependencies = [
 
 [[package]]
 name = "linkroid-adb"
-version = "0.1.1"
+version = "0.2.0"
 dependencies = [
  "thiserror 2.0.21",
  "tokio",
@@ -2428,7 +2428,7 @@ dependencies = [
 
 [[package]]
 name = "linkroid-cli"
-version = "0.1.1"
+version = "0.2.0"
 dependencies = [
  "anyhow",
  "clap",
@@ -2448,7 +2448,7 @@ dependencies = [
 
 [[package]]
 name = "linkroid-core"
-version = "0.1.1"
+version = "0.2.0"
 dependencies = [
  "blake3",
  "bytes",
@@ -2483,7 +2483,7 @@ dependencies = [
 
 [[package]]
 name = "linkroid-credential-provider"
-version = "0.1.1"
+version = "0.2.0"
 dependencies = [
  "libc",
  "linkroid-protocol",
@@ -2493,7 +2493,7 @@ dependencies = [
 
 [[package]]
 name = "linkroid-desktop"
-version = "0.1.1"
+version = "0.2.0"
 dependencies = [
  "anyhow",
  "blake3",
@@ -2529,7 +2529,7 @@ dependencies = [
 
 [[package]]
 name = "linkroid-ffi"
-version = "0.1.1"
+version = "0.2.0"
 dependencies = [
  "jni-sys 0.4.1",
  "linkroid-core",
@@ -2544,7 +2544,7 @@ dependencies = [
 
 [[package]]
 name = "linkroid-protocol"
-version = "0.1.1"
+version = "0.2.0"
 dependencies = [
  "ciborium",
  "data-encoding",
@@ -2559,7 +2559,7 @@ dependencies = [
 
 [[package]]
 name = "linkroid-vcam"
-version = "0.1.1"
+version = "0.2.0"
 dependencies = [
  "ab_glyph",
  "embed-resource",
@@ -5277,7 +5277,7 @@ dependencies = [
 
 [[package]]
 name = "xtask"
-version = "0.1.1"
+version = "0.2.0"
 dependencies = [
  "anyhow",
  "serde_json",

@@ -34,6 +34,11 @@
   </provides>
   <content_rating type="oars-1.1" />
   <releases>
+    <release version="0.2.0" date="2026-11-26">
+      <description>
+        <p>Remote phone biometric unlock and workstation lock for Windows and Android.</p>
+      </description>
+    </release>
     <release version="0.1.1" date="2026-11-09">
       <description>
         <p>Brand identity refresh, new Linkroid interlocking emblem, theme cleanup, and packaging polish.</p>
