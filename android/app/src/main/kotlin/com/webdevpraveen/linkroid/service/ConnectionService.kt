@@ -58,6 +58,7 @@ class ConnectionService : LifecycleService() {
         com.webdevpraveen.linkroid.notifications.TaskNotifications.createChannels(this)
         com.webdevpraveen.linkroid.webcam.WebcamService.createChannel(this)
         com.webdevpraveen.linkroid.webcam.WebcamRequests.createChannel(this)
+        com.webdevpraveen.linkroid.auth.BiometricAuthRequests.createChannel(this)
         val core = (application as LinkroidApplication).core
         if (!startInForeground(core.state.value)) {
             stopSelf()

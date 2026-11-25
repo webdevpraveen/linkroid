@@ -199,6 +199,22 @@ pub mod qobject {
         /// Stops this PC ringing.
         #[qinvokable]
         fn stop_ringing(self: Pin<&mut AppController>);
+        /// Checks the status of Windows Phone Unlock.
+        #[qinvokable]
+        #[cxx_name = "checkAuthStatus"]
+        fn check_auth_status(self: &AppController) -> QString;
+        /// Enrolls credentials for phone unlock.
+        #[qinvokable]
+        #[cxx_name = "enrollAuthCredential"]
+        fn enroll_auth_credential(self: &AppController, password: &QString) -> bool;
+        /// Revokes credentials for phone unlock.
+        #[qinvokable]
+        #[cxx_name = "revokeAuthCredential"]
+        fn revoke_auth_credential(self: &AppController) -> bool;
+        /// Locks the PC workstation.
+        #[qinvokable]
+        #[cxx_name = "lockPc"]
+        fn lock_pc(self: &AppController) -> bool;
         /// Allows a paired phone to control this PC's mouse and keyboard (from
         /// the one-time prompt sheet).
         #[qinvokable]
@@ -1681,6 +1697,73 @@ impl qobject::AppController {
         QString::from(
             &serde_json::to_string(&crate::win::wifi::saved_networks()).unwrap_or_else(|_| "[]".into()),
         )
+    }
+
+    pub fn check_auth_status(&self) -> QString {
+        #[cfg(windows)]
+        {
+            match crate::win::auth::query_status() {
+                Ok((enrolled, connected, name, locked)) => {
+                    let obj = serde_json::json!({
+                        "available": true,
+                        "enrolled": enrolled,
+                        "phone_connected": connected,
+                        "phone_name": name,
+                        "locked_out": locked,
+                    });
+                    QString::from(&obj.to_string())
+                }
+                Err(err) => {
+                    let obj = serde_json::json!({
+                        "available": false,
+                        "error": err,
+                    });
+                    QString::from(&obj.to_string())
+                }
+            }
+        }
+        #[cfg(not(windows))]
+        {
+            let obj = serde_json::json!({
+                "available": false,
+                "error": "Only supported on Windows",
+            });
+            QString::from(&obj.to_string())
+        }
+    }
+
+    pub fn enroll_auth_credential(&self, password: &QString) -> bool {
+        #[cfg(windows)]
+        {
+            crate::win::auth::enroll_credential(&password.to_string()).is_ok()
+        }
+        #[cfg(not(windows))]
+        {
+            let _ = password;
+            false
+        }
+    }
+
+    pub fn revoke_auth_credential(&self) -> bool {
+        #[cfg(windows)]
+        {
+            crate::win::auth::revoke_credential().unwrap_or(false)
+        }
+        #[cfg(not(windows))]
+        {
+            false
+        }
+    }
+
+    pub fn lock_pc(&self) -> bool {
+        #[cfg(windows)]
+        {
+            crate::win::auth::lock_workstation().is_ok()
+        }
+        #[cfg(not(windows))]
+        {
+            false
+        }
     }
 
     pub fn hotspot_network(&self, device: &QString) -> QString {

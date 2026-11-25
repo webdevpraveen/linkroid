@@ -102,16 +102,17 @@ if (-not $SkipBuild) {
     if ($isArm64) {
         $env:QMAKE = Join-Path $arm64ToolDir "qmake6.exe"
         if (-not (Test-Path $env:QMAKE)) { $env:QMAKE = Join-Path $arm64ToolDir "qmake.exe" }
-        Invoke-Native "the build" { cargo build --release --target aarch64-pc-windows-msvc -p linkroid-desktop -p linkroid-vcam }
+        Invoke-Native "the build" { cargo build --release --target aarch64-pc-windows-msvc -p linkroid-desktop -p linkroid-vcam -p linkroid-credential-provider }
     } else {
         $env:PATH = "$(Join-Path $targetKit 'bin');$env:PATH"
-        Invoke-Native "the build" { cargo build --release -p linkroid-desktop -p linkroid-vcam }
+        Invoke-Native "the build" { cargo build --release -p linkroid-desktop -p linkroid-vcam -p linkroid-credential-provider }
     }
 }
 $exe = Join-Path $targetDir 'linkroid-desktop.exe'
 if (-not (Test-Path $exe)) { throw "no release build at $exe" }
 $vcamDll = Join-Path $targetDir 'linkroid_vcam.dll'
 if (-not (Test-Path $vcamDll)) { throw "no release build at $vcamDll" }
+$cpDll = Join-Path $targetDir 'linkroid_credential_provider.dll'
 
 # ---- Stage ----
 Step "Stage"
@@ -136,6 +137,9 @@ if (Test-Path $stage) {
 New-Item -ItemType Directory -Force $stage | Out-Null
 Copy-Item $exe $stage
 Copy-Item $vcamDll $stage
+if (Test-Path $cpDll) {
+    Copy-Item $cpDll $stage
+}
 
 Invoke-Native "windeployqt" {
     $deployArgs = @(

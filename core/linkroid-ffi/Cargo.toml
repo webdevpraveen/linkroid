@@ -23,6 +23,7 @@ bindgen = ["uniffi/cli"]
 
 [dependencies]
 linkroid-core.workspace = true
+linkroid-protocol.workspace = true
 thiserror.workspace = true
 tokio.workspace = true
 tracing.workspace = true

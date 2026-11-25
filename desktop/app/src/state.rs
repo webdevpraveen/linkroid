@@ -573,7 +573,8 @@ impl AppState {
             | NodeEvent::CameraCaptureRequested { .. }
             | NodeEvent::CameraCaptureCancelled { .. }
             // The updater acts on it (update_relay); nothing shows.
-            | NodeEvent::UpdateHint { .. } => Changes::NONE,
+            | NodeEvent::UpdateHint { .. }
+            | NodeEvent::AuthUnlockChallenge { .. } => Changes::NONE,
             NodeEvent::CameraCaptureReceived { .. } => Changes::TIMELINE,
             NodeEvent::ClipboardHistoryChanged => Changes::CLIPBOARD | Changes::TIMELINE,
             NodeEvent::TimelineChanged => Changes::TIMELINE,

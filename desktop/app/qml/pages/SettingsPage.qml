@@ -1482,6 +1482,36 @@ Item {
                                     onToggled: (on) => Mirror.setKeepScreenOff(deviceCard.deviceId, on)
                                 }
                             }
+                            ListRow {
+                                id: phoneUnlockRow
+                                width: parent.width
+                                visible: Qt.platform.os === "windows"
+                                iconPath: Icons.lock
+                                title: qsTr("Phone Biometric Unlock")
+                                description: qsTr("Unlock Windows LogonUI with your phone\'s fingerprint. Password is encrypted locally with DPAPI.")
+                                Row {
+                                    spacing: 8
+                                    Button {
+                                        variant: "tonal"
+                                        size: "sm"
+                                        text: qsTr("Lock PC now")
+                                        onClicked: AppController.lockPc()
+                                    }
+                                    Button {
+                                        id: enrollBtn
+                                        variant: "outline"
+                                        size: "sm"
+                                        text: qsTr("Set up")
+                                        onClicked: enrollAuthSheet.open()
+                                    }
+                                    Button {
+                                        variant: "ghost"
+                                        size: "sm"
+                                        text: qsTr("Revoke")
+                                        onClicked: AppController.revokeAuthCredential()
+                                    }
+                                }
+                            }
                             Repeater {
                                 model: page.toggleGroups
                                 delegate: Column {
@@ -3822,6 +3852,81 @@ Item {
             Row {
                 anchors.right: parent.right
                 Button { variant: "text"; text: qsTr("Close"); onClicked: micOutputSheet.close() }
+            }
+        }
+    }
+
+    Sheet {
+        id: enrollAuthSheet
+        cardWidth: 420
+        property string passwordInput: ""
+        property string statusMsg: ""
+        Column {
+            width: parent.width
+            spacing: 16
+            Txt {
+                width: parent.width
+                text: qsTr("Set up Phone Biometric Unlock")
+                role: "headline"
+                wrapMode: Text.WordWrap
+            }
+            Txt {
+                width: parent.width
+                wrapMode: Text.WordWrap
+                role: "body"
+                muted: true
+                text: qsTr("Enter your Windows user password once. It is encrypted on this PC with DPAPI and readable only by the SYSTEM service to log you in when your paired phone confirms your fingerprint. It never travels over the network and is never stored on the phone.")
+            }
+            Rectangle {
+                width: parent.width
+                height: 40
+                radius: Theme.radiusSm
+                color: Theme.surfaceContainerHighest
+                border.width: 1
+                border.color: Theme.outlineVariant
+                TextInput {
+                    id: pwdField
+                    anchors.fill: parent
+                    anchors.margins: 8
+                    echoMode: TextInput.Password
+                    color: Theme.surfaceContent
+                    font.pixelSize: 14
+                    clip: true
+                    onTextChanged: enrollAuthSheet.passwordInput = text
+                }
+            }
+            Txt {
+                visible: enrollAuthSheet.statusMsg.length > 0
+                width: parent.width
+                text: enrollAuthSheet.statusMsg
+                role: "bodySmall"
+                color: Theme.primary
+            }
+            Row {
+                anchors.right: parent.right
+                spacing: 10
+                Button {
+                    variant: "text"
+                    text: qsTr("Cancel")
+                    onClicked: {
+                        pwdField.text = ""
+                        enrollAuthSheet.statusMsg = ""
+                        enrollAuthSheet.close()
+                    }
+                }
+                Button {
+                    text: qsTr("Save & Enable")
+                    enabled: enrollAuthSheet.passwordInput.length > 0
+                    onClicked: {
+                        if (AppController.enrollAuthCredential(enrollAuthSheet.passwordInput)) {
+                            enrollAuthSheet.statusMsg = qsTr("Phone unlock enabled successfully.")
+                            pwdField.text = ""
+                            enrollAuthSheet.close()
+                        } else {
+                            enrollAuthSheet.statusMsg = qsTr("Failed to enroll credential with service.")
+                        }
+                    }
+                }
             }
         }
     }

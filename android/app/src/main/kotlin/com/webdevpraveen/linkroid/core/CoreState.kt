@@ -423,6 +423,7 @@ data class CoreState(
         is Event.PcMirrorConfig,
         is Event.PcMirrorFrame,
         is Event.PcMirrorEnded,
+        is Event.AuthUnlockChallenge,
         -> this
     }
 

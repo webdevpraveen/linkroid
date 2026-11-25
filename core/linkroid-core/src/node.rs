@@ -19,6 +19,7 @@ use iroh::{
 use iroh_mdns_address_lookup::{DiscoveryEvent, MdnsAddressLookup};
 use linkroid_protocol::{
     ALPN_PAIR, ALPN_SESSION, DeviceId, Envelope, ErrorCode,
+    auth::{SignedLockRequest, UnlockChallenge, UnlockResponse},
     messages::{
         Battery, ClipSet, DeviceInfo, DeviceKind, HelloUpdate, MediaCommand, MediaPlayer, Notification,
         NotifyAction, NotifyKey, PowerLevel, Ring, types,
@@ -212,6 +213,8 @@ pub(crate) struct Shared {
     /// Smart suggestion for the most recently received text clip, if any.
     pub(crate) last_clip_suggestion: Mutex<Option<(DeviceId, crate::ClipSuggestion)>>,
     pub(crate) private_clip_lifetime: std::time::Duration,
+    /// Biometric authentication & challenge-response manager.
+    pub auth: Arc<crate::auth::AuthManager>,
     /// LocalSend v2.1 discovery, server, and outgoing transfers.
     pub(crate) localsend: crate::localsend::LocalSendState,
     /// Bound loopback TCP port for the phone-side USB tunnel listener (0 if disabled).
@@ -1708,6 +1711,7 @@ impl Node {
             clipboard_history,
             last_clip_suggestion: Mutex::new(None),
             private_clip_lifetime: config.private_clip_lifetime,
+            auth: Arc::new(crate::auth::AuthManager::new(id)),
             localsend,
             usb_listener_port: std::sync::atomic::AtomicU16::new(0),
             usb_bridge_ports: Arc::new(Mutex::new(std::collections::HashSet::new())),
@@ -1726,6 +1730,22 @@ impl Node {
             runtime: tokio::runtime::Handle::current(),
             away_switch: tokio::sync::Mutex::new(()),
         });
+
+        let weak_shared = Arc::downgrade(&shared);
+        shared.auth.set_challenge_sender(Arc::new(move |peer, challenge| {
+            if let Some(shared) = weak_shared.upgrade() {
+                let rt = shared.runtime.clone();
+                rt.spawn(async move {
+                    let Some(session) = shared.session(&peer) else {
+                        return;
+                    };
+                    let Ok(env) = Envelope::new(types::AUTH_UNLOCK_CHALLENGE, &challenge) else {
+                        return;
+                    };
+                    let _ = session.send(env).await;
+                });
+            }
+        }));
 
         if config.lan_discovery {
             start_lan_discovery(&shared, &config.device.name)?;
@@ -1758,6 +1778,44 @@ impl Node {
         run_queue_coordinator(Arc::downgrade(&shared), shared.cancel.child_token());
         tracing::info!(device = %id.short(), lan = config.lan_discovery, away = config.away_mode, "node started");
         Ok(Node { shared, router: Arc::new(router) })
+    }
+
+    /// Returns the biometric authentication manager for this node.
+    pub fn auth(&self) -> Arc<crate::auth::AuthManager> {
+        self.shared.auth.clone()
+    }
+
+    /// Sends an unlock challenge to a connected peer phone.
+    pub async fn send_unlock_challenge(
+        &self,
+        peer: DeviceId,
+        challenge: UnlockChallenge,
+    ) -> Result<()> {
+        let session = self.shared.session(&peer).ok_or(Error::Offline)?;
+        let env = Envelope::new(types::AUTH_UNLOCK_CHALLENGE, &challenge)?;
+        session.send(env).await
+    }
+
+    /// Sends an unlock response with biometric signature to a peer PC.
+    pub async fn send_unlock_response(
+        &self,
+        peer: DeviceId,
+        response: UnlockResponse,
+    ) -> Result<()> {
+        let session = self.shared.session(&peer).ok_or(Error::Offline)?;
+        let env = Envelope::new(types::AUTH_UNLOCK_RESPONSE, &response)?;
+        session.send(env).await
+    }
+
+    /// Sends a signed lock request to lock the peer PC.
+    pub async fn send_lock_request(
+        &self,
+        peer: DeviceId,
+        request: SignedLockRequest,
+    ) -> Result<()> {
+        let session = self.shared.session(&peer).ok_or(Error::Offline)?;
+        let env = Envelope::new(types::AUTH_LOCK_REQUEST, &request)?;
+        session.send(env).await
     }
 
     /// Whether remote / mobile data connections outside the local Wi-Fi/LAN are allowed.

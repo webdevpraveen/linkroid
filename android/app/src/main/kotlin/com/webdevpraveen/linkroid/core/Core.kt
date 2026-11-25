@@ -911,6 +911,18 @@ class Core(context: Context, private val scope: CoroutineScope) : EventListener 
                     lastPcMirrorKeyframe = null
                 }
                 if (_state.value.devices.isEmpty()) ConnectionService.stop(context)
+                com.webdevpraveen.linkroid.auth.BiometricAuthManager.deleteKey(event.id)
+            }
+            is Event.AuthUnlockChallenge -> {
+                val pcName = _state.value.nameOf(event.id) ?: context.getString(R.string.your_pc)
+                com.webdevpraveen.linkroid.auth.BiometricAuthRequests.show(
+                    context,
+                    event.id,
+                    pcName,
+                    event.sessionId,
+                    event.nonce,
+                    event.expiry.toLong(),
+                )
             }
             is Event.Paired -> ConnectionService.start(context)
             is Event.ClipboardReceived -> scope.launch(Dispatchers.IO) { onClipboardReceived(event.id) }
@@ -2531,6 +2543,11 @@ class Core(context: Context, private val scope: CoroutineScope) : EventListener 
         scope.launch(Dispatchers.IO) {
             runCatching { currentNode.mirrorStop(pcId, 0u) }
         }
+    }
+
+    /** Sends a signed biometric unlock challenge response back to the requesting PC. */
+    fun sendUnlockResponse(pcId: String, sessionId: String, timestamp: ULong, signature: ByteArray) {
+        command { it.sendUnlockResponse(pcId, sessionId, timestamp, signature) }
     }
 
     /** Runs a command on the node, turning errors into a message. */

@@ -14,6 +14,7 @@ use linkroid_core::{
     ConnectionPath, DeviceId, LinkState, Node, NodeConfig, NodeEvent, PairingEvent,
     features::{CapabilityMatrix, FeatureState},
 };
+use linkroid_protocol::auth;
 use tokio::{runtime::Runtime, sync::broadcast::error::RecvError};
 
 uniffi::setup_scaffolding!();
@@ -780,6 +781,14 @@ pub enum Event {
         device_id: String,
         device_name: String,
         dropped_count: u32,
+    },
+    /// A paired PC sent an unlock challenge requesting biometric authentication (phones only).
+    AuthUnlockChallenge {
+        id: String,
+        session_id: String,
+        nonce: Vec<u8>,
+        pc_id: String,
+        expiry: u64,
     },
 }
 
@@ -2513,6 +2522,15 @@ impl Event {
             }
             NodeEvent::PcAudioFrame { device, sample_rate, channels, pcm } => {
                 Event::PcAudioFrame { device: device.to_string(), sample_rate, channels, pcm }
+            }
+            NodeEvent::AuthUnlockChallenge { device, challenge } => {
+                Event::AuthUnlockChallenge {
+                    id: device.to_string(),
+                    session_id: challenge.session_id,
+                    nonce: challenge.nonce,
+                    pc_id: challenge.pc_id.to_string(),
+                    expiry: challenge.expiry,
+                }
             }
         })
     }
@@ -4490,6 +4508,61 @@ impl LinkroidNode {
         let node = self.node.clone();
         self.block_on_rt(async move { Ok(node.wake_via_relay(&peer_id, mac_bytes, bcast).await?) })
     }
+
+    /// Sends an unlock response to the peer PC with the biometric signature.
+    pub fn send_unlock_response(
+        &self,
+        peer_id: String,
+        session_id: String,
+        timestamp: u64,
+        signature: Vec<u8>,
+    ) -> Result<()> {
+        let peer = parse_id(&peer_id)?;
+        let response = auth::UnlockResponse {
+            session_id,
+            timestamp,
+            signature,
+        };
+        let node = self.node.clone();
+        self.block_on_rt(async move { Ok(node.send_unlock_response(peer, response).await?) })
+    }
+
+    /// Sends a signed lock request to lock the peer PC.
+    pub fn send_lock_request(
+        &self,
+        peer_id: String,
+        nonce: Vec<u8>,
+        pc_id: String,
+        timestamp: u64,
+        signature: Option<Vec<u8>>,
+    ) -> Result<()> {
+        let peer = parse_id(&peer_id)?;
+        let pc = parse_id(&pc_id)?;
+        let request = auth::SignedLockRequest {
+            nonce,
+            pc_id: pc,
+            timestamp,
+            signature,
+        };
+        let node = self.node.clone();
+        self.block_on_rt(async move { Ok(node.send_lock_request(peer, request).await?) })
+    }
+}
+
+/// Computes the domain-separated SHA-256 digest for an unlock challenge signature.
+#[uniffi::export]
+pub fn auth_unlock_digest(nonce: Vec<u8>, session_id: String, pc_id: String, timestamp: u64) -> Result<Vec<u8>> {
+    let pc = parse_id(&pc_id)?;
+    let digest = auth::canonical_unlock_digest(&nonce, &session_id, &pc, timestamp);
+    Ok(digest.to_vec())
+}
+
+/// Computes the domain-separated SHA-256 digest for a lock command signature.
+#[uniffi::export]
+pub fn auth_lock_digest(nonce: Vec<u8>, pc_id: String, timestamp: u64) -> Result<Vec<u8>> {
+    let pc = parse_id(&pc_id)?;
+    let digest = auth::canonical_lock_digest(&nonce, &pc, timestamp);
+    Ok(digest.to_vec())
 }
 
 /// Classifies a text clip into a single context chip suggestion (`None` for

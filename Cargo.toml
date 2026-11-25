@@ -8,6 +8,7 @@ members = [
     "core/linkroid-ffi",
     "desktop/app",
     "desktop/vcam",
+    "desktop/credential-provider",
     "tools/xtask",
 ]
 # Patched crates, used through [patch.crates-io] below.

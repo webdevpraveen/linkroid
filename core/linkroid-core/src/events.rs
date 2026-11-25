@@ -5,6 +5,7 @@ use std::path::PathBuf;
 
 use linkroid_protocol::{
     DeviceId,
+    auth::UnlockChallenge,
     messages::{Battery, CameraCaptureMode, DeviceInfo, MediaPlayer, Notification, PowerLevel},
 };
 
@@ -283,5 +284,10 @@ pub enum NodeEvent {
         peer: DeviceId,
         peer_name: String,
         dropped_count: u32,
+    },
+    /// A paired PC sent an unlock challenge requesting biometric verification.
+    AuthUnlockChallenge {
+        device: DeviceId,
+        challenge: UnlockChallenge,
     },
 }

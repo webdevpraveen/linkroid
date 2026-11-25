@@ -7,6 +7,7 @@
 
 pub mod audio;
 pub mod audio_out;
+pub mod auth;
 pub mod autostart;
 pub mod ble_beacon;
 pub mod browser;

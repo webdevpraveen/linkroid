@@ -531,6 +531,21 @@ enum Command {
         #[arg(required = true, trailing_var_arg = true, allow_hyphen_values = true)]
         target: Vec<String>,
     },
+    /// Manage the Windows authentication service and Named Pipe daemon.
+    #[command(subcommand)]
+    Service(ServiceCommand),
+}
+
+#[derive(Subcommand, Debug, Clone, PartialEq, Eq)]
+enum ServiceCommand {
+    /// Run the authentication service Named Pipe daemon in console mode.
+    Run,
+    /// Send an immediate lock command to the workstation via the Named Pipe.
+    Lock,
+    /// Query the status of phone enrollment and connection from the Named Pipe.
+    Status,
+    /// Revoke stored credentials and un-enroll phone unlock.
+    Revoke,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, ValueEnum)]
@@ -2572,6 +2587,27 @@ fn main() -> Result<()> {
                         .await;
                 }
 
+                if let Command::Service(cmd) = &cli.command {
+                    match cmd {
+                        ServiceCommand::Lock => return run_service_client_lock(),
+                        ServiceCommand::Status => return run_service_client_status(),
+                        ServiceCommand::Revoke => return run_service_client_revoke(),
+                        ServiceCommand::Run => {
+                            let node = Box::pin(start_node(&cli)).await?;
+                            let data_dir = match &cli.data_dir {
+                                Some(d) => d.clone(),
+                                None => dirs::data_local_dir().context("no local data directory")?.join("Linkroid"),
+                            };
+                            let server = linkroid_core::auth::service::AuthPipeServer::new(node.auth(), data_dir);
+                            println!("Linkroid auth service running on Named Pipe. Press Ctrl+C to stop.");
+                            let server_res = tokio::task::spawn_blocking(move || server.run()).await;
+                            node.shutdown().await;
+                            server_res.map_err(|e| anyhow::anyhow!(e))?.map_err(|e| anyhow::anyhow!(e))?;
+                            return Ok(0);
+                        }
+                    }
+                }
+
                 let node = Box::pin(start_node(&cli)).await?;
                 let result = Box::pin(run(&cli, &node)).await;
                 node.shutdown().await;
@@ -4299,6 +4335,7 @@ async fn run(cli: &Cli, node: &Node) -> Result<()> {
             watch(node, false).await?;
         }
         Command::NotifyWhen { .. } => unreachable!("handled in main"),
+        Command::Service(_) => unreachable!("handled in main"),
     }
     Ok(())
 }
@@ -5850,6 +5887,144 @@ async fn run_notify_when(
     transport.shutdown().await;
     send_res?;
     Ok(exit_code)
+}
+
+fn run_service_client_lock() -> Result<i32> {
+    println!("Sending Lock command via Linkroid auth pipe…");
+    let resp = send_pipe_request(&linkroid_core::auth::ipc::IpcRequest::LockWorkStation)?;
+    match resp {
+        linkroid_core::auth::ipc::IpcResponse::LockAcknowledged { success: true } => {
+            println!("✓ Workstation lock initiated.");
+            Ok(0)
+        }
+        linkroid_core::auth::ipc::IpcResponse::Error { message, .. } => {
+            eprintln!("Error locking workstation: {message}");
+            Ok(1)
+        }
+        other => {
+            eprintln!("Unexpected response from service: {other:?}");
+            Ok(1)
+        }
+    }
+}
+
+fn run_service_client_status() -> Result<i32> {
+    let resp = send_pipe_request(&linkroid_core::auth::ipc::IpcRequest::QueryStatus)?;
+    match resp {
+        linkroid_core::auth::ipc::IpcResponse::Status {
+            enrolled,
+            phone_connected,
+            phone_name,
+            locked_out,
+        } => {
+            println!("Linkroid Biometric Auth Status:");
+            println!("  Enrolled:        {enrolled}");
+            println!("  Phone connected: {phone_connected}");
+            println!("  Phone name:      {}", phone_name.as_deref().unwrap_or("(none)"));
+            println!("  Locked out:      {locked_out}");
+            Ok(0)
+        }
+        linkroid_core::auth::ipc::IpcResponse::Error { message, .. } => {
+            eprintln!("Error querying service status: {message}");
+            Ok(1)
+        }
+        other => {
+            eprintln!("Unexpected response from service: {other:?}");
+            Ok(1)
+        }
+    }
+}
+
+fn run_service_client_revoke() -> Result<i32> {
+    let resp = send_pipe_request(&linkroid_core::auth::ipc::IpcRequest::RevokeCredential)?;
+    match resp {
+        linkroid_core::auth::ipc::IpcResponse::CredentialRevoked { success } => {
+            if success {
+                println!("✓ Stored credential wiped and phone enrollment revoked.");
+            } else {
+                println!("No stored credential existed.");
+            }
+            Ok(0)
+        }
+        linkroid_core::auth::ipc::IpcResponse::Error { message, .. } => {
+            eprintln!("Error revoking credential: {message}");
+            Ok(1)
+        }
+        other => {
+            eprintln!("Unexpected response from service: {other:?}");
+            Ok(1)
+        }
+    }
+}
+
+#[cfg(windows)]
+#[allow(unsafe_code)]
+fn send_pipe_request(
+    req: &linkroid_core::auth::ipc::IpcRequest,
+) -> Result<linkroid_core::auth::ipc::IpcResponse> {
+    use windows::{
+        Win32::{
+            Foundation::CloseHandle,
+            Storage::FileSystem::{
+                CreateFileW, ReadFile, WriteFile, FILE_ATTRIBUTE_NORMAL, FILE_GENERIC_READ,
+                FILE_GENERIC_WRITE, FILE_SHARE_NONE, OPEN_EXISTING,
+            },
+        },
+        core::{HSTRING, PCWSTR},
+    };
+    use linkroid_core::auth::ipc::{
+        AUTH_PIPE_NAME, decode_ipc_message, encode_ipc_message,
+    };
+
+    let pipe_h = HSTRING::from(AUTH_PIPE_NAME);
+    let handle = unsafe {
+        CreateFileW(
+            PCWSTR(pipe_h.as_ptr()),
+            FILE_GENERIC_READ.0 | FILE_GENERIC_WRITE.0,
+            FILE_SHARE_NONE,
+            None,
+            OPEN_EXISTING,
+            FILE_ATTRIBUTE_NORMAL,
+            None,
+        )
+    }
+    .map_err(|e| anyhow::anyhow!("Failed to connect to Linkroid auth pipe (is the service running?): {e}"))?;
+
+    let encoded = encode_ipc_message(req).map_err(|e| anyhow::anyhow!("{e}"))?;
+    let mut written = 0u32;
+    unsafe {
+        WriteFile(
+            handle,
+            Some(&encoded),
+            Some(&mut written),
+            None,
+        )
+    }
+    .map_err(|e| anyhow::anyhow!("Failed to send IPC request: {e}"))?;
+
+    let mut buf = vec![0u8; 65536];
+    let mut read_bytes = 0u32;
+    unsafe {
+        ReadFile(
+            handle,
+            Some(&mut buf),
+            Some(&mut read_bytes),
+            None,
+        )
+    }
+    .map_err(|e| anyhow::anyhow!("Failed to read IPC response: {e}"))?;
+
+    let _ = unsafe { CloseHandle(handle) };
+
+    buf.truncate(read_bytes as usize);
+    decode_ipc_message(&buf).map_err(|e| anyhow::anyhow!("{e}"))
+}
+
+#[cfg(not(windows))]
+fn send_pipe_request(
+    _req: &linkroid_core::auth::ipc::IpcRequest,
+) -> Result<linkroid_core::auth::ipc::IpcResponse> {
+    bail!("Named Pipe IPC is only supported on Windows")
 }
 
 #[cfg(windows)]

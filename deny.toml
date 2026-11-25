@@ -9,6 +9,11 @@ all-features = true
 # only when they are direct dependencies.
 unmaintained = "workspace"
 yanked = "deny"
+ignore = [
+    # GHSA-hrj5-67jp-wqp9 / RUSTSEC-2026-0592: Url::origin on nested blob: URLs.
+    # Linkroid only parses http/https/custom-scheme URLs, never nested blob: URLs.
+    "RUSTSEC-2026-0592",
+]
 
 [licenses]
 # Permissive and weak-copyleft licenses that are compatible with both the
@@ -36,6 +41,7 @@ exceptions = [
     { crate = "linkroid-cli", allow = ["GPL-3.0-or-later"] },
     { crate = "linkroid-desktop", allow = ["GPL-3.0-or-later"] },
     { crate = "linkroid-vcam", allow = ["GPL-3.0-or-later"] },
+    { crate = "linkroid-credential-provider", allow = ["GPL-3.0-or-later"] },
     { crate = "xtask", allow = ["GPL-3.0-or-later"] },
     { crate = "s1-qt-rust", allow = ["GPL-3.0-or-later"] },
 ]
