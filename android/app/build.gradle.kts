@@ -28,6 +28,9 @@ val appVersionCode: Int = run {
     major * 10_000_000 + minor * 100_000 + patch * 1_000 + build
 }
 
+val rustAbis: List<String> =
+    (findProperty("linkroid.abis") as String?)?.split(",")?.map(String::trim) ?: listOf("arm64-v8a", "x86_64")
+
 android {
     namespace = "com.webdevpraveen.linkroid"
     compileSdk = 37
@@ -39,6 +42,10 @@ android {
         targetSdk = 37
         versionCode = appVersionCode
         versionName = appVersion
+
+        ndk {
+            abiFilters += rustAbis
+        }
     }
 
     // Only the languages the app offers (res/xml/locales_config.xml) go into the APK: a
@@ -61,13 +68,20 @@ android {
     // installed over a debug build for testing. Never publish such a build: the
     // release workflow refuses to run without the key and verifies the signature.
     val keystore = System.getenv("LINKROID_KEYSTORE")?.let(::file)?.takeIf { it.exists() }
+    val keystorePassword = System.getenv("LINKROID_KEYSTORE_PASSWORD") ?: "linkroid"
     signingConfigs {
+        getByName("debug") {
+            enableV1Signing = true
+            enableV2Signing = true
+        }
         if (keystore != null) {
             create("release") {
                 storeFile = keystore
-                storePassword = System.getenv("LINKROID_KEYSTORE_PASSWORD")
+                storePassword = keystorePassword
                 keyAlias = "linkroid"
-                keyPassword = System.getenv("LINKROID_KEYSTORE_PASSWORD")
+                keyPassword = keystorePassword
+                enableV1Signing = true
+                enableV2Signing = true
             }
         }
     }
@@ -172,8 +186,6 @@ abstract class BundleFonts : DefaultTask() {
 }
 
 val workspaceDir: Directory = rootProject.layout.projectDirectory.dir("..")
-val rustAbis: List<String> =
-    (findProperty("linkroid.abis") as String?)?.split(",")?.map(String::trim) ?: listOf("arm64-v8a", "x86_64")
 
 androidComponents {
     onVariants { variant ->
